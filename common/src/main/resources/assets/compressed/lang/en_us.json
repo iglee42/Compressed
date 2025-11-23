@@ -1,0 +1,23 @@
+{
+  "gui.compressed.client_config": "Configure Compressed Client Settings",
+  "gui.compressed.client_config.global_warning": "These settings are global for all boxes.",
+
+  "gui.compressed.hot_bar.set_spawn": "Set Entry Point",
+  "gui.compressed.hot_bar.set_name": "Rename Box",
+  "gui.compressed.hot_bar.export": "Export Box as Schematic",
+  "gui.compressed.hot_bar.exit_box": "Exit Box",
+  "gui.compressed.hot_bar.configure_mod": "Mod Settings",
+
+  "message.compressed.box_not_found_in_data": "Cannot find box in world data, recreating a new one... !",
+  "message.compressed.box_rename": "Enter in chat the name you want to give to your box within the next 30 seconds or type 'cancel' to cancel.\n The '&' char can be used with color codes to color the box's name",
+  "message.compressed.box_rename_expired": "Time Expired, the chat is no longer recorded",
+  "message.compressed.box_rename_cancelled": "Name changing cancelled !",
+  "message.compressed.box_rename_success": "Name modified successfully to : %s",
+  "message.compressed.box_exported": "Box Structure exported at %s",
+  "message.compressed.box_export_failed": "Failed to export the box structure : %s",
+  "message.compressed.box_not_found_entry_point": "Failed to get your entry point, teleporting to your spawnpoint",
+  "message.compressed.player_box_not_found": "Unable to find in which box you are!",
+  "message.compressed.box_spawn_modified": "Spawn modified successfully !",
+  "message.compressed.level_not_found": "Unable to find the level for compressed blocks !"
+
+}
