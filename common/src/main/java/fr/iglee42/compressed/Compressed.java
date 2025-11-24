@@ -15,13 +15,11 @@ import fr.iglee42.compressed.packets.payloads.c2s.SetPlayerBoxSpawnPayload;
 import fr.iglee42.compressed.packets.payloads.s2c.ClearPlayerCurrentBoxPayload;
 import fr.iglee42.compressed.packets.payloads.s2c.OpenClientConfigScreenPayload;
 import fr.iglee42.compressed.packets.payloads.s2c.SyncPlayerCurrentBoxPayload;
-import fr.iglee42.compressed.registries.CBlockEntities;
-import fr.iglee42.compressed.registries.CBlocks;
-import fr.iglee42.compressed.registries.CDataComponents;
-import fr.iglee42.compressed.registries.CItems;
+import fr.iglee42.compressed.registries.*;
 import fr.iglee42.compressed.utils.BoxesSaveData;
 import net.fabricmc.api.EnvType;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +37,7 @@ public final class Compressed {
         CItems.ITEMS.register();
         CBlockEntities.BLOCK_ENTITIES.register();
         CDataComponents.DATA_COMPONENTS.register();
+        CCreativeTabs.initTabs();
 
         registerPacketReceivers();
 

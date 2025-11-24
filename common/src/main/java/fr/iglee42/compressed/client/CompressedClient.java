@@ -4,6 +4,7 @@ import dev.architectury.event.EventResult;
 import dev.architectury.event.events.client.ClientChatEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.networking.NetworkManager;
+import dev.architectury.registry.ReloadListenerRegistry;
 import dev.architectury.registry.client.rendering.BlockEntityRendererRegistry;
 import fr.iglee42.compressed.Compressed;
 import fr.iglee42.compressed.client.renderer.modules.ChunkLoadRenderer;
@@ -17,10 +18,12 @@ import fr.iglee42.compressed.packets.payloads.s2c.OpenClientConfigScreenPayload;
 import fr.iglee42.compressed.packets.payloads.s2c.SyncPlayerCurrentBoxPayload;
 import fr.iglee42.compressed.registries.CBlockEntities;
 import fr.iglee42.compressed.utils.Box;
+import fr.iglee42.compressed.utils.TutorialRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.packs.PackType;
 import org.lwjgl.glfw.GLFW;
 
 public class CompressedClient {
@@ -55,14 +58,14 @@ public class CompressedClient {
             nameEditCountdown = -1;
             return EventResult.interruptFalse();
         });
-
+        ReloadListenerRegistry.register(PackType.CLIENT_RESOURCES,new TutorialRegistry());
     }
 
     public static void registerBER(){
         BlockEntityRendererRegistry.register(CBlockEntities.COMPRESSED.get(), CompressedBERenderer::new);
         BlockEntityRendererRegistry.register(CBlockEntities.SLOT.get(), SlotRenderer::new);
         BlockEntityRendererRegistry.register(CBlockEntities.CHUNK_LOAD.get(), ChunkLoadRenderer::new);
-
+        BlockEntityRendererRegistry.register(CBlockEntities.INFINITE_CHUNK_LOAD.get(), ChunkLoadRenderer::new);
     }
 
 

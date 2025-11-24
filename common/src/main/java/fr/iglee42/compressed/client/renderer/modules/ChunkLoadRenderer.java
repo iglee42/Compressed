@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import fr.iglee42.compressed.blockentities.CompressedBlockEntity;
 import fr.iglee42.compressed.blockentities.modules.ChunkLoadModule;
+import fr.iglee42.compressed.blockentities.modules.InfiniteChunkLoadModule;
 import fr.iglee42.compressed.config.CClientConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -21,14 +22,14 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 
-public class ChunkLoadRenderer implements BlockEntityRenderer<ChunkLoadModule> {
+public class ChunkLoadRenderer<T extends ChunkLoadModule> implements BlockEntityRenderer<T> {
 
     public static final ResourceLocation BEAM_LOCATION = ResourceLocation.withDefaultNamespace("textures/entity/beacon_beam.png");
 
     public ChunkLoadRenderer(BlockEntityRendererProvider.Context context) { }
 
     @Override
-    public void render(ChunkLoadModule be, float pt, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay) {
+    public void render(T be, float pt, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay) {
         if (be.getRemaining() > 0 && be.getLevel() != null){
             if (CClientConfig.get().chunkLoaderDisplayBeaconBeam())
                 BeaconRenderer.renderBeaconBeam(
@@ -70,7 +71,8 @@ public class ChunkLoadRenderer implements BlockEntityRenderer<ChunkLoadModule> {
     }
 
 
-    private boolean shouldRenderName(Minecraft minecraft, Player player, ChunkLoadModule be) {
+    private boolean shouldRenderName(Minecraft minecraft, Player player, T be) {
+        if (be instanceof InfiniteChunkLoadModule) return false;
         double sneakRadius = 16;
         if (player.isCrouching()){
             return sneakRadius > 0 && player.position().distanceToSqr(new Vec3(be.getBlockPos().getX() + 0.5, be.getBlockPos().getY() + 0.5,be.getBlockPos().getZ() + 0.5)) <= sneakRadius * sneakRadius;
@@ -97,7 +99,7 @@ public class ChunkLoadRenderer implements BlockEntityRenderer<ChunkLoadModule> {
     }
 
     @Override
-    public boolean shouldRenderOffScreen(ChunkLoadModule blockEntity) {
+    public boolean shouldRenderOffScreen(T blockEntity) {
         return true;
     }
 

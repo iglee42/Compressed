@@ -2,6 +2,7 @@ package fr.iglee42.compressed.client;
 
 import dev.architectury.networking.NetworkManager;
 import fr.iglee42.compressed.Compressed;
+import fr.iglee42.compressed.client.gui.CTutorialScreen;
 import fr.iglee42.compressed.client.gui.ClientConfigScreen;
 import fr.iglee42.compressed.packets.payloads.c2s.ExitPlayerFromBoxPayload;
 import fr.iglee42.compressed.packets.payloads.c2s.SetPlayerBoxSpawnPayload;
@@ -128,7 +129,8 @@ public class BoxHud {
             }
         }),
         EXIT_BOX("leave_box",()->NetworkManager.sendToServer(ExitPlayerFromBoxPayload.INSTANCE)),
-        CONFIGURE_MOD("configure",()->Minecraft.getInstance().setScreen(new ClientConfigScreen()))
+        CONFIGURE_MOD("configure",()->Minecraft.getInstance().setScreen(new ClientConfigScreen())),
+        HELP("help",()->Minecraft.getInstance().setScreen(new CTutorialScreen(CTutorialScreen.TutorialPage.INTRO,true)))
         ;
 
         private final String icon;

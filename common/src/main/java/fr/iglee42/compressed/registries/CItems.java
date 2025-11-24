@@ -12,7 +12,7 @@ public class CItems {
 
 
     public static Item.Properties baseProps(){
-        return new Item.Properties();
+        return new Item.Properties().arch$tab(CCreativeTabs.TAB);
     }
 
 }

@@ -3,13 +3,13 @@
   "id": "compressed",
   "version": "${version}",
   "name": "Compressed",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "description": "Create compressed boxes to gain space in your bases",
   "authors": [
-    "Me!"
+    "iglee42"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://iglee.fr/",
+    "sources": "https://github.com/iglee42/Compressed"
   },
   "license": "CC0-1.0",
   "icon": "assets/compressed/icon.png",
@@ -33,7 +33,5 @@
     "architectury": ">=13.0.8",
     "fabric-api": "*"
   },
-  "suggests": {
-    "another-mod": "*"
-  }
+  "suggests": {}
 }

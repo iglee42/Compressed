@@ -7,9 +7,9 @@ license = "MIT"
 modId = "compressed"
 version = "${version}"
 displayName = "Compressed"
-authors = "Me!"
+authors = "iglee42"
 description = '''
-This is an example description! Tell everyone what your mod is about!
+Create compressed boxes to gain space in your bases
 '''
 #logoFile = ""
 

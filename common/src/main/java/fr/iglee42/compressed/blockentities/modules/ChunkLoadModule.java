@@ -12,15 +12,16 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class ChunkLoadModule extends Module {
 
     @Getter
-    @Setter(AccessLevel.PRIVATE)
+    @Setter(AccessLevel.PROTECTED)
     private float remaining;
     @Getter
-    @Setter(AccessLevel.PRIVATE)
+    @Setter(AccessLevel.PROTECTED)
     private int remainingTime;
 
 
@@ -29,6 +30,11 @@ public class ChunkLoadModule extends Module {
 
     public ChunkLoadModule(BlockPos blockPos, BlockState blockState) {
         super(CBlockEntities.CHUNK_LOAD.get(), blockPos, blockState);
+    }
+
+
+    public ChunkLoadModule(BlockEntityType<? extends ChunkLoadModule> type,BlockPos blockPos, BlockState blockState) {
+        super(type, blockPos, blockState);
     }
 
 
@@ -58,7 +64,7 @@ public class ChunkLoadModule extends Module {
         }
     }
 
-    private void work(ServerLevel level, BlockPos pos, BlockState state,ChunkPos chunkPos){
+    protected void work(ServerLevel level, BlockPos pos, BlockState state,ChunkPos chunkPos){
         int charges = state.getValue(ChunkLoaderModuleBlock.CHARGES);
         setRemaining(charges / 4f);
         if (charges < 1){
