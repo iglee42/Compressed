@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "charges=0": {
+      "model": "compressedbox:block/chunk_loader/0"
+    },
+    "charges=1": {
+      "model": "compressedbox:block/chunk_loader/1"
+    },
+    "charges=2": {
+      "model": "compressedbox:block/chunk_loader/2"
+    },
+    "charges=3": {
+      "model": "compressedbox:block/chunk_loader/3"
+    },
+    "charges=4": {
+      "model": "compressedbox:block/chunk_loader/4"
+    }
+  }
+}

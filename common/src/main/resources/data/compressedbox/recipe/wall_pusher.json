@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "IPI",
+    "P P",
+    "IPI"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:obsidian"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    }
+  },
+  "result": {
+    "id": "compressedbox:wall_pusher",
+    "count": 2
+  }
+}

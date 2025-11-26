@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "IPI",
+    "P P",
+    "IPI"
+  ],
+  "key": {
+    "I": {
+      "tag": "c:nuggets/iron"
+    },
+    "P": {
+      "item": "minecraft:paper"
+    }
+  },
+  "result": {
+    "id": "compressedbox:slot",
+    "count": 4
+  }
+}

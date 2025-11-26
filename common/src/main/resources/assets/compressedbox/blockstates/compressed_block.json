@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "compressedbox:block/compressed_block"
+    }
+  }
+}

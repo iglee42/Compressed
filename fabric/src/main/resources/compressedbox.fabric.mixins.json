@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "fr.iglee42.compressedbox.fabric.mixins",
+  "compatibilityLevel": "JAVA_21",
+  "minVersion": "0.8",
+  "client": [
+    "GuiMixin",
+    "MinecraftClientMixin",
+    "MouseHandlerMixin"
+  ],
+  "mixins": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

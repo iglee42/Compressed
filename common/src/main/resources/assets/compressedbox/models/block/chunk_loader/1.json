@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "bottom": "compressedbox:block/chunk_loader/bottom",
+    "side": "compressedbox:block/chunk_loader/side_1",
+    "top": "compressedbox:block/chunk_loader/top_on"
+  }
+}

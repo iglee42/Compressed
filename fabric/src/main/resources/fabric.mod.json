@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "compressed",
+  "id": "compressedbox",
   "version": "${version}",
-  "name": "Compressed",
+  "name": "Compressed Box",
   "description": "Create compressed boxes to gain space in your bases",
   "authors": [
     "iglee42"
@@ -11,20 +11,20 @@
     "homepage": "https://iglee.fr/",
     "sources": "https://github.com/iglee42/Compressed"
   },
-  "license": "CC0-1.0",
-  "icon": "assets/compressed/icon.png",
+  "license": "MIT",
+  "icon": "logo.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "fr.iglee42.compressed.fabric.CompressedFabric"
+      "fr.iglee42.compressedbox.fabric.CompressedFabric"
     ],
     "client": [
-      "fr.iglee42.compressed.fabric.client.CompressedFabricClient"
+      "fr.iglee42.compressedbox.fabric.client.CompressedFabricClient"
     ]
   },
   "mixins": [
-    "compressed.mixins.json",
-    "compressed.fabric.mixins.json"
+    "compressedbox.mixins.json",
+    "compressedbox.fabric.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.17.3",

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "OPO",
+    "PDP",
+    "OPO"
+  ],
+  "key": {
+    "D": {
+      "tag": "c:storage_blocks/diamond"
+    },
+    "O": {
+      "item": "minecraft:obsidian"
+    },
+    "P": {
+      "tag": "c:glass_blocks"
+    }
+  },
+  "result": {
+    "id": "compressedbox:compressed_block"
+  }
+}

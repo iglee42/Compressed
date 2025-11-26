@@ -7,7 +7,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'compressed'
+rootProject.name = 'Compressed Box'
 
 include 'common'
 include 'fabric'

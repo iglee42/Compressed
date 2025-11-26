@@ -1,0 +1,17 @@
+{
+  "type": "compressedbox:compressed",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "compressedbox:void",
+      "lakes": false,
+      "features": false,
+      "layers": [
+        {
+          "height": 1,
+          "block": "minecraft:air"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GPG",
+    "PNP",
+    "OOO"
+  ],
+  "key": {
+    "G": {
+      "tag": "c:storage_blocks/gold"
+    },
+    "O": {
+      "item": "minecraft:obsidian"
+    },
+    "N": {
+      "item": "minecraft:nether_star"
+    },
+    "P": {
+      "item": "minecraft:red_wool"
+    }
+  },
+  "result": {
+    "id": "compressedbox:chunk_loader"
+  }
+}

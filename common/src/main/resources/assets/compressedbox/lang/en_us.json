@@ -1,0 +1,43 @@
+{
+  "gui.compressedbox.client_config": "Configure Compressed Client Settings",
+  "gui.compressedbox.client_config.global_warning": "These settings are global for all boxes.",
+
+  "gui.compressedbox.hot_bar.set_spawn": "Set Entry Point",
+  "gui.compressedbox.hot_bar.set_name": "Rename Box",
+  "gui.compressedbox.hot_bar.export": "Export Box as Schematic",
+  "gui.compressedbox.hot_bar.exit_box": "Exit Box",
+  "gui.compressedbox.hot_bar.configure_mod": "Mod Settings",
+  "gui.compressedbox.hot_bar.help": "Help",
+
+  "message.compressedbox.box_not_found_in_data": "Cannot find box in world data, recreating a new one... !",
+  "message.compressedbox.box_rename": "Enter in chat the name you want to give to your box within the next 30 seconds or type 'cancel' to cancel.\n The '&' char can be used with color codes to color the box's name",
+  "message.compressedbox.box_rename_expired": "Time Expired, the chat is no longer recorded",
+  "message.compressedbox.box_rename_cancelled": "Name changing cancelled !",
+  "message.compressedbox.box_rename_success": "Name modified successfully to : %s",
+  "message.compressedbox.box_exported": "Box Structure exported at %s",
+  "message.compressedbox.box_too_many_export": "There are too many exported schematics of this box, please delete some before exporting again !",
+  "message.compressedbox.box_export_failed": "Failed to export the box structure : %s",
+  "message.compressedbox.box_not_found_entry_point": "Failed to get your entry point, teleporting to your spawnpoint",
+  "message.compressedbox.player_box_not_found": "Unable to find in which box you are!",
+  "message.compressedbox.box_spawn_modified": "Spawn modified successfully !",
+  "message.compressedbox.level_not_found": "Unable to find the level for compressed blocks !",
+  "message.compressedbox.cannot_push_wall": "Unable to push the wall (maybe the box is already max size) !",
+
+  "gui.compressedbox.tutorial.intro": "Introduction",
+  "gui.compressedbox.tutorial.chunk_loader": "Chunk Loaders",
+  "gui.compressedbox.tutorial.slot": "Slots",
+  "gui.compressedbox.tutorial.wall_pusher": "Increasing Box Size",
+  "gui.compressedbox.tutorial": "Help with Compressed Mod",
+  "gui.compressedbox.skip_tutorial": "Skip Tutorial",
+
+  "category.compressedbox.tab": "Compressed Boxes",
+  "block.compressedbox.compressed_block": "Compressed Box",
+  "block.compressedbox.chunk_loader": "Chunk Loader",
+  "block.compressedbox.infinite_chunk_loader": "Infinite Chunk Loader",
+  "block.compressedbox.slot": "Slot",
+
+  "item.compressedbox.wall_pusher": "Wall Pusher",
+
+  "keybind.compressedbox.category": "Compressed Box",
+  "keybind.compressedbox.show_hud": "Show Box HUD"
+}

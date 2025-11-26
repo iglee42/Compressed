@@ -1,0 +1,58 @@
+{
+  "intro": [
+    {
+      "text": "Welcome to Compressed Box!\n\nThis tutorial will guide you through the basic features of the mod. You can skip it at any time by pressing the 'Skip Tutorial' button at the bottom.\n\nIn order to start using the mod, you will need to craft a [item:compressedbox:compressed_block].\nBy using the "
+    },
+    {
+      "keybind": "key.use"
+    },
+    {
+      "text": " on the Compressed Box, you will be teleported inside it, where you can build and store items..."
+    },
+    {
+      "text": "\n\nYou can also open the menu of the box by pressing and maintaining the "
+    },
+    {
+      "keybind": "keybind.compressedbox.show_hud"
+    },
+    {
+      "text": " , which will display a HUD with useful information and options.\nYou can navigate through the different actions of this HUD by scrolling with your mouse wheel. The name of the action is displayed under the HUD with the name of the current box.\nTo activate an action from the HUD you just need to use the "
+    },
+    {
+      "keybind": "key.use"
+    }
+  ],
+    "chunk_loader": [
+      {
+        "text": "[item:compressedbox:chunk_loader] is a special block that allow you to keep chunks loaded even when you are not in the box."
+      },
+      {
+        "text": "\n\nOnce placed inside your Compressed Box, it will need to be charged with [item:minecraft:glowstone]. When charged, it will start loading the chunks around it, allowing you to keep machines and other contraptions running even when you are away"
+      },
+      {
+        "text": "\n\nIn order to help you knowing if the chunk loader is working, the chunk loader will display a beacon beam with a specific color depending on the remaining charge (green = full, yellow = half, red = low).\n\nThe remaining time can also be visualized when looking at the chunk loader or by sneaking near it.\nOne charge of the chunk loader last for 1 hour by default (Verify it in your modpack's configs)"
+      },
+      {
+        "text": "\n\n\nCharging the chunk loader is really annoying especially if you are away for a long time, this is why the [item:compressedbox:infinite_chunk_loader] was created.\nThis block works exactly like the chunk loader but does not require any charge to work."
+      },
+      {
+        "text": "\n\nTo create this Infinite Chunk Loader, you will need to use a regular chunk loader on an active beacon.\nThis has a chance to consume the beacon (25% by default)."
+      }
+    ],
+  "slot": [
+    {
+      "text": "[item:compressedbox:slot] are special blocks that allow you to store items in a very compact way.\nBy placing a slot block inside your compressed box, you will be able to store a stack of items inside it.\nSlots can be accessed directly with hopper/pipes."
+    },
+    {
+      "text": "\n\nThe Compressed Box's Block can also be used as an interface for all the slots in the box.\nFor example, if you have 5 slots in your box, you can input 5 stacks of any item in the box's block and it will automatically store them in the slots inside of the box.\nIn order for this to be possible, the box must be loaded like with a [item:compressedbox:chunk_loader]."
+    }
+  ],
+  "wall_pusher": [
+    {
+      "text": "The default size of a Compressed Box is 16x16x16 blocks, but sometimes this is not enough space to build what you want.\nThis is why the [item:compressedbox:wall_pusher] was created."
+    },
+    {
+      "text": "\n\nBy using the wall pusher on a wall/ceiling of the box, you will be able to push this wall outward by 1 block, increasing the size of your box.\nYou can do this multiple times until you reach the maximum size allowed which is 32x32x32 (4 chunks).\nBe careful when using the wall pusher, as it will destroy all wall block you might fall into the void, so stand on solid block to prevent this!"
+    }
+  ]
+}
