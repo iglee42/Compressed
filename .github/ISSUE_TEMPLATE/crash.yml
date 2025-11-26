@@ -1,6 +1,7 @@
 name: My game crashed!
 description: Report an issue that crashes the game.
 labels: [ "Crash" ]
+assignees: "iglee42"
 body:
   - type: textarea
     attributes:
