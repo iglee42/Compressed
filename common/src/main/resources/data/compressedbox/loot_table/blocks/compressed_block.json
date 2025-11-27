@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:copy_components",
+              "include": [
+                "compressedbox:box_id"
+              ],
+              "source": "block_entity"
+            }
+          ],
+          "name": "compressedbox:compressed_block"
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "compressedbox:blocks/compressed_block"
+}

@@ -1,11 +1,20 @@
 package fr.iglee42.compressedbox.fabric;
 
+import dev.architectury.registry.CreativeTabRegistry;
+import dev.architectury.registry.fabric.CreativeTabRegistryImpl;
 import fr.iglee42.compressedbox.registries.CBlockEntities;
+import fr.iglee42.compressedbox.registries.CBlocks;
+import fr.iglee42.compressedbox.registries.CCreativeTabs;
+import fr.iglee42.compressedbox.registries.CItems;
 import net.fabricmc.api.ModInitializer;
 
 import fr.iglee42.compressedbox.CompressedBox;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 public final class CompressedFabric implements ModInitializer {
 
@@ -24,6 +33,14 @@ public final class CompressedFabric implements ModInitializer {
 
         registerCapabilities();
 
+
+        ItemGroupEvents.modifyEntriesEvent(CCreativeTabs.TAB.getKey()).register(content->{
+            content.accept(CBlocks.COMPRESSED_BLOCK.get());
+            content.accept(CBlocks.SLOT.get());
+            content.accept(CBlocks.CHUNK_LOADER.get());
+            content.accept(CBlocks.INFINITE_CHUNK_LOADER.get());
+            content.accept(CItems.WALL_PUSHER.get());
+        });
     }
 
     private void registerCapabilities() {

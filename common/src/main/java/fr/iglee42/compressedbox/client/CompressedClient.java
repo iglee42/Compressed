@@ -4,8 +4,10 @@ import dev.architectury.event.EventResult;
 import dev.architectury.event.events.client.ClientChatEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.networking.NetworkManager;
+import dev.architectury.platform.Platform;
 import dev.architectury.registry.ReloadListenerRegistry;
 import dev.architectury.registry.client.rendering.BlockEntityRendererRegistry;
+import dev.architectury.registry.client.rendering.RenderTypeRegistry;
 import fr.iglee42.compressedbox.CompressedBox;
 import fr.iglee42.compressedbox.client.renderer.modules.ChunkLoadRenderer;
 import fr.iglee42.compressedbox.client.renderer.CompressedBERenderer;
@@ -16,11 +18,13 @@ import fr.iglee42.compressedbox.packets.handlers.s2c.SyncPlayerCurrentBoxHandler
 import fr.iglee42.compressedbox.packets.payloads.c2s.SetBoxNamePayload;
 import fr.iglee42.compressedbox.packets.payloads.s2c.*;
 import fr.iglee42.compressedbox.registries.CBlockEntities;
+import fr.iglee42.compressedbox.registries.CBlocks;
 import fr.iglee42.compressedbox.utils.Box;
 import fr.iglee42.compressedbox.utils.TutorialRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackType;
 import org.lwjgl.glfw.GLFW;
@@ -60,6 +64,7 @@ public class CompressedClient {
             return EventResult.interruptFalse();
         });
         ReloadListenerRegistry.register(PackType.CLIENT_RESOURCES,new TutorialRegistry());
+        if (Platform.isFabric()) RenderTypeRegistry.register(RenderType.cutoutMipped(), CBlocks.COMPRESSED_BLOCK.get());
     }
 
     public static void registerBER(){

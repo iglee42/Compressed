@@ -6,7 +6,6 @@ import io.wispforest.owo.config.annotation.Config;
 import io.wispforest.owo.config.annotation.Modmenu;
 import io.wispforest.owo.config.annotation.Sync;
 
-@Modmenu(modId = CompressedBox.MODID)
 @Config(name = CompressedBox.MODID+"-client",wrapperName = "CompressedClientConfig")
 public class CompressedClientConfigModel {
 
