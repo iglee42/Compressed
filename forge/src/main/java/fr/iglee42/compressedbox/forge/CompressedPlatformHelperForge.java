@@ -1,31 +1,31 @@
-package fr.iglee42.compressedbox.neoforge;
+package fr.iglee42.compressedbox.forge;
 
 import fr.iglee42.compressedbox.CompressedBox;
 import fr.iglee42.compressedbox.config.CClientConfig;
 import fr.iglee42.compressedbox.config.CConfig;
-import fr.iglee42.compressedbox.neoforge.client.CompressedClientConfigNeoForge;
+import fr.iglee42.compressedbox.forge.client.CompressedClientConfigForge;
 import fr.iglee42.compressedbox.utils.PlatformHelper;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.ModList;
-import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.fml.loading.FMLPaths;
-import net.neoforged.neoforge.internal.versions.neoforge.NeoForgeVersion;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.versions.forge.ForgeVersion;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompressedPlatformHelperNeoForge implements PlatformHelper {
+public class CompressedPlatformHelperForge implements PlatformHelper {
 
 
     @Override
     public CConfig getConfig() {
-        return CompressedConfigNeoForge.WRAPPED;
+        return CompressedConfigForge.WRAPPED;
     }
 
     @Override
     public CClientConfig getClientConfig() {
-        return FMLEnvironment.dist == Dist.CLIENT ? CompressedClientConfigNeoForge.WRAPPED : null;
+        return FMLEnvironment.dist == Dist.CLIENT ? CompressedClientConfigForge.WRAPPED : null;
     }
 
     @Override
@@ -35,12 +35,12 @@ public class CompressedPlatformHelperNeoForge implements PlatformHelper {
 
     @Override
     public String getPlatform() {
-        return "NeoForge";
+        return "Forge";
     }
 
     @Override
     public String getPlatformVersion() {
-        return NeoForgeVersion.getVersion();
+        return ForgeVersion.getVersion();
     }
 
     @Override

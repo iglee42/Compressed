@@ -44,42 +44,43 @@ public class BoxesSaveData extends SavedData {
     public BoxesSaveData(){
     }
 
-    public BoxesSaveData(CompoundTag tag,HolderLookup.Provider registries){
+    public BoxesSaveData(CompoundTag tag,Level storageLevel){
         boxes = new ArrayList<>(Codec.list(Box.CODEC).decode(
-                RegistryOps.create(NbtOps.INSTANCE,registries),
+                NbtOps.INSTANCE,
                 tag.getList("boxes", CompoundTag.TAG_COMPOUND)
-        ).mapOrElse(Pair::getFirst, e->new ArrayList<>()));
-        lastPos = CExtraCodecs.CHUNK_POS.decode(NbtOps.INSTANCE,tag.get("lastPos")).getOrThrow().getFirst();
+        ).result().map(Pair::getFirst).orElse(new ArrayList<>()));
+        lastPos = CExtraCodecs.CHUNK_POS.decode(NbtOps.INSTANCE,tag.get("lastPos")).getOrThrow(false,e->{}).getFirst();
         playerEntries = new HashMap<>();
         CompoundTag entries = tag.getCompound("playerEntries");
         entries.getAllKeys().forEach(k->{
             UUID uuid = UUID.fromString(k);
             CompoundTag entry = entries.getCompound(k);
-            BlockPos pos = NbtUtils.readBlockPos(entry,"pos").orElse(null);
-            ResourceKey<Level> level = ResourceKey.codec(Registries.DIMENSION).decode(RegistryOps.create(NbtOps.INSTANCE,registries),entry.get("dimension")).mapOrElse(Pair::getFirst,p->null);
+            BlockPos pos = NbtUtils.readBlockPos(entry.getCompound("pos"));
+            ResourceKey<Level> level = ResourceKey.codec(Registries.DIMENSION).decode(RegistryOps.create(NbtOps.INSTANCE,storageLevel.registryAccess()),entry.get("dimension")).result().map(Pair::getFirst).orElse(null);
 
             if (pos != null && level != null){
                 playerEntries.put(uuid,Pair.of(level,pos));
             }
         });
-        knownPlayers = new ArrayList<>(Codec.list(UUIDUtil.STRING_CODEC).decode(NbtOps.INSTANCE,tag.getList("knownPlayers", CompoundTag.TAG_STRING)).mapOrElse(Pair::getFirst, e->new ArrayList<>()));
+        knownPlayers = new ArrayList<>(Codec.list(UUIDUtil.STRING_CODEC).decode(NbtOps.INSTANCE,tag.getList("knownPlayers", CompoundTag.TAG_STRING)).result().map(Pair::getFirst).orElse(new ArrayList<>()));
     }
 
     public static BoxesSaveData get(Level level) {
         if (level.isClientSide) {
             throw new RuntimeException(new IllegalAccessException("Boxes saved datas can only be accessed on server-side !"));
         }
-        DimensionDataStorage storage = ((ServerLevel) level).getServer().overworld().getDataStorage();
-        return storage.computeIfAbsent(new Factory<>(BoxesSaveData::new,BoxesSaveData::new,DataFixTypes.LEVEL), CompressedBox.MODID+"_boxes");
+        ServerLevel storageLevel = ((ServerLevel) level).getServer().overworld();
+        DimensionDataStorage storage = storageLevel.getDataStorage();
+        return storage.computeIfAbsent(tag->new BoxesSaveData(tag,storageLevel),BoxesSaveData::new, CompressedBox.MODID+"_boxes");
     }
 
     @Override
-    public @NotNull CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
+    public @NotNull CompoundTag save(CompoundTag tag) {
         tag.put("boxes",Codec.list(Box.CODEC).encodeStart(
-                RegistryOps.create(NbtOps.INSTANCE,registries),
+                NbtOps.INSTANCE,
                 boxes
-        ).getOrThrow());
-        tag.put("lastPos",CExtraCodecs.CHUNK_POS.encodeStart(NbtOps.INSTANCE,lastPos).getOrThrow());
+        ).getOrThrow(false,e->{}));
+        tag.put("lastPos",CExtraCodecs.CHUNK_POS.encodeStart(NbtOps.INSTANCE,lastPos).getOrThrow(false,e->{}));
         CompoundTag entries = new CompoundTag();
 
         playerEntries.forEach((uuid,p)->{

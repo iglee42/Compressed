@@ -1,19 +1,20 @@
-package fr.iglee42.compressedbox.neoforge;
+package fr.iglee42.compressedbox.forge;
 
 import fr.iglee42.compressedbox.config.CConfig;
 import fr.iglee42.compressedbox.config.CConfigComments;
-import net.neoforged.neoforge.common.ModConfigSpec;
-
-public class CompressedConfigNeoForge {
+import net.minecraftforge.common.ForgeConfigSpec;
 
 
-    public static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
-    public static final ModConfigSpec SPEC;
+public class CompressedConfigForge {
 
-    public static final ModConfigSpec.IntValue chunkLoaderChargeDuration;
-    public static final ModConfigSpec.BooleanValue chunkLoaderWorksEverywhere;
-    public static final ModConfigSpec.BooleanValue infiniteChunkLoaderRecipeEnabled;
-    public static final ModConfigSpec.DoubleValue beaconDestroyChance;
+
+    public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+    public static final ForgeConfigSpec SPEC;
+
+    public static final ForgeConfigSpec.IntValue chunkLoaderChargeDuration;
+    public static final ForgeConfigSpec.BooleanValue chunkLoaderWorksEverywhere;
+    public static final ForgeConfigSpec.BooleanValue infiniteChunkLoaderRecipeEnabled;
+    public static final ForgeConfigSpec.DoubleValue beaconDestroyChance;
 
     static {
         BUILDER.push("CompressedBox Config");

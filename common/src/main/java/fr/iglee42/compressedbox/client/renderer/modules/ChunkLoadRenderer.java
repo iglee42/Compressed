@@ -22,7 +22,7 @@ import org.joml.Matrix4f;
 
 public class ChunkLoadRenderer<T extends ChunkLoadModule> implements BlockEntityRenderer<T> {
 
-    public static final ResourceLocation BEAM_LOCATION = ResourceLocation.withDefaultNamespace("textures/entity/beacon_beam.png");
+    public static final ResourceLocation BEAM_LOCATION = new ResourceLocation("textures/entity/beacon_beam.png");
 
     public ChunkLoadRenderer(BlockEntityRendererProvider.Context context) { }
 
@@ -39,8 +39,8 @@ public class ChunkLoadRenderer<T extends ChunkLoadModule> implements BlockEntity
                     be.getLevel().getGameTime(),
                     0,
                     BeaconRenderer.MAX_RENDER_Y,
-                    be.getRemaining() > 0.5 ? DyeColor.LIME.getTextureDiffuseColor() : (
-                            be.getRemaining() > 0.25 ? DyeColor.YELLOW.getTextureDiffuseColor() : DyeColor.RED.getTextureDiffuseColor()
+                    be.getRemaining() > 0.5 ? DyeColor.LIME.getTextureDiffuseColors() : (
+                            be.getRemaining() > 0.25 ? DyeColor.YELLOW.getTextureDiffuseColors() : DyeColor.RED.getTextureDiffuseColors()
                     ),
                     0.2f,
                     0.25f

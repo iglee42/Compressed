@@ -33,9 +33,9 @@ public abstract class Module extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
-        super.saveAdditional(compoundTag, provider);
-        save(compoundTag,provider,false);
+    protected void saveAdditional(CompoundTag compoundTag) {
+        super.saveAdditional(compoundTag);
+        save(compoundTag,false);
     }
 
     @Override
@@ -44,26 +44,26 @@ public abstract class Module extends BlockEntity {
     }
 
     @Override
-    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+    public @NotNull CompoundTag getUpdateTag() {
         CompoundTag tag = new CompoundTag();
-        save(tag,provider,true);
+        save(tag,true);
         return tag;
     }
 
 
     @Override
-    protected void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
-        super.loadAdditional(compoundTag, provider);
-        load(compoundTag,provider);
+    public void load(CompoundTag compoundTag) {
+        super.load(compoundTag);
+        loadModule(compoundTag);
     }
 
-    protected void load(CompoundTag tag, HolderLookup.Provider registries){
-        if (tag.contains("box")) setClientBox(Box.CODEC.decode(RegistryOps.create(NbtOps.INSTANCE,registries),tag.get("box")).mapOrElse(Pair::getFirst, e->null));
+    protected void loadModule(CompoundTag tag){
+        if (tag.contains("box") && level != null && level.isClientSide) setClientBox(Box.CODEC.decode(RegistryOps.create(NbtOps.INSTANCE,level.registryAccess()),tag.get("box")).result().map(Pair::getFirst).orElse(null));
     }
 
-    protected void save(CompoundTag tag, HolderLookup.Provider registries, boolean forClient){
-        if (forClient && getBox() != null){
-            tag.put("box",Box.CODEC.encodeStart(RegistryOps.create(NbtOps.INSTANCE,registries),getBox()).mapOrElse(Function.identity(), e->new CompoundTag()));
+    protected void save(CompoundTag tag, boolean forClient){
+        if (forClient && getBox() != null && level != null){
+            tag.put("box",Box.CODEC.encodeStart(RegistryOps.create(NbtOps.INSTANCE,level.registryAccess()),getBox()).result().map(Function.identity()).orElse(new CompoundTag()));
         }
     }
 

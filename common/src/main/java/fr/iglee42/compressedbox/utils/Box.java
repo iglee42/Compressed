@@ -12,10 +12,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -40,7 +38,7 @@ public class Box {
     
     public static final int MAX_BOX_SIZE = 32;
 
-    public static final ResourceKey<Level> DIMENSION = ResourceKey.create(Registries.DIMENSION, ResourceLocation.fromNamespaceAndPath(CompressedBox.MODID, "compressed"));
+    public static final ResourceKey<Level> DIMENSION = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(CompressedBox.MODID, "compressed"));
 
     public static final Codec<Box> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
@@ -52,17 +50,6 @@ public class Box {
                     Codec.unboundedMap(UUIDUtil.STRING_CODEC, BlockPos.CODEC).xmap(HashMap::new, Function.identity()).fieldOf("playersEnters").forGetter(Box::getPlayersEnters))
                     .apply(instance, Box::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, Box> STREAM_CODEC = StreamCodec.composite(
-            UUIDUtil.STREAM_CODEC, Box::getId,
-            ByteBufCodecs.STRING_UTF8, Box::getRawName,
-            UUIDUtil.STREAM_CODEC, Box::getOwner,
-            BlockPos.STREAM_CODEC, Box::getMinPos,
-            BlockPos.STREAM_CODEC, Box::getMaxPos,
-            ByteBufCodecs.map(HashMap::new, UUIDUtil.STREAM_CODEC, BlockPos.STREAM_CODEC), Box::getPlayersEnters,
-            Box::new);
-
-
-
 
     @Builder.Default
     private final UUID id = UUID.randomUUID();
@@ -72,6 +59,11 @@ public class Box {
     private BlockPos maxPos;
     @Builder.Default
     private final HashMap<UUID, BlockPos> playersEnters = new HashMap<>();
+
+    public static Box decode(FriendlyByteBuf buffer){
+        return new Box(buffer.readUUID(),buffer.readUtf(),buffer.readUUID(),buffer.readBlockPos(),buffer.readBlockPos(),new HashMap<>(buffer.readMap(FriendlyByteBuf::readUUID, FriendlyByteBuf::readBlockPos)));
+    }
+
 
     protected void generate(Level level) {
         ServerLevel dimension = level.getServer().getLevel(DIMENSION);
@@ -98,6 +90,17 @@ public class Box {
         }
 
     }
+
+
+    public void encode(FriendlyByteBuf buffer){
+        buffer.writeUUID(getId());
+        buffer.writeUtf(getRawName());
+        buffer.writeUUID(getOwner());
+        buffer.writeBlockPos(getMinPos());
+        buffer.writeBlockPos(getMaxPos());
+        buffer.writeMap(getPlayersEnters(), FriendlyByteBuf::writeUUID, FriendlyByteBuf::writeBlockPos);
+    }
+
 
     public void teleportPlayerIn(Player player, ServerLevel level) {
         BoxesSaveData manager = BoxesSaveData.get(level);

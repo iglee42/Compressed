@@ -33,50 +33,33 @@ public class ClientConfigScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        LinearLayout linearLayout = this.layout.addToHeader(LinearLayout.vertical().spacing(8));
-        linearLayout.addChild(new StringWidget(getTitle(), this.font), LayoutSettings::alignHorizontallyCenter);
         GridLayout gridLayout = new GridLayout();
         gridLayout.defaultCellSetting().paddingHorizontal(4).paddingBottom(4).alignHorizontallyLeft();
         GridLayout.RowHelper rowHelper = gridLayout.createRowHelper(1);
 
 
 
-        boxRenderName = rowHelper.addChild(Checkbox
-                .builder(Component.literal("Box Display Name"),minecraft.font)
-                .selected(CClientConfig.get().displayBoxName())
-                .tooltip(Tooltip.create(Component.literal(CConfigComments.boxDisplayName)))
-                .build());
-        boxRenderPreview = rowHelper.addChild(Checkbox
-                .builder(Component.literal("Box Display Preview"),minecraft.font)
-                .selected(CClientConfig.get().displayBoxPreview())
-                .tooltip(Tooltip.create(Component.literal(CConfigComments.boxDisplayPreview)))
-                .build());
-        alwaysDisplayBoxInformation = rowHelper.addChild(Checkbox
-                .builder(Component.literal("Always Display Box Information"),minecraft.font)
-                .selected(CClientConfig.get().alwaysDisplayBoxInformation())
-                .tooltip(Tooltip.create(Component.literal(CConfigComments.alwaysDisplayBoxInformation)))
-                .build());
-
-        chunkLoaderBeam = rowHelper.addChild(Checkbox
-                .builder(Component.literal("Chunk Loader Display Beacon Beam"),minecraft.font)
-                .selected(CClientConfig.get().chunkLoaderDisplayBeaconBeam())
-                .tooltip(Tooltip.create(Component.literal(CConfigComments.chunkLoaderDisplayBeaconBeam)))
-                .build());
-        chunkLoaderTime = rowHelper.addChild(Checkbox
-                .builder(Component.literal("Chunk Loader Display Remaining Time"),minecraft.font)
-                .selected(CClientConfig.get().chunkLoaderDisplayTime())
-                .tooltip(Tooltip.create(Component.literal(CConfigComments.chunkLoaderDisplayTime)))
-                .build());
+        boxRenderName = rowHelper.addChild(createCheckBox(Component.literal("Box Display Name"),CClientConfig.get().displayBoxName(),Tooltip.create(Component.literal(CConfigComments.boxDisplayName))));
+        boxRenderName = rowHelper.addChild(createCheckBox(Component.literal("Box Display Preview"),CClientConfig.get().displayBoxPreview(),Tooltip.create(Component.literal(CConfigComments.boxDisplayPreview))));
+        boxRenderName = rowHelper.addChild(createCheckBox(Component.literal("Always Display Box Information"),CClientConfig.get().alwaysDisplayBoxInformation(),Tooltip.create(Component.literal(CConfigComments.alwaysDisplayBoxInformation))));
+        boxRenderName = rowHelper.addChild(createCheckBox(Component.literal("Chunk Loader Display Beacon Beam"),CClientConfig.get().chunkLoaderDisplayBeaconBeam(),Tooltip.create(Component.literal(CConfigComments.chunkLoaderDisplayBeaconBeam))));
+        boxRenderName = rowHelper.addChild(createCheckBox(Component.literal("Chunk Loader Display Remaining Time"),CClientConfig.get().chunkLoaderDisplayTime(),Tooltip.create(Component.literal(CConfigComments.chunkLoaderDisplayTime))));
 
 
         layout.addToContents(gridLayout);
         LinearLayout footer = this.layout.addToFooter(LinearLayout.vertical().spacing(8));
-        footer.addChild(new StringWidget(Component.translatable("gui.compressedbox.client_config.global_warning").withStyle(ChatFormatting.YELLOW), this.font), LayoutSettings::alignHorizontallyCenter);
+        footer.addChild(new StringWidget(Component.translatable("gui.compressedbox.client_config.global_warning").withStyle(ChatFormatting.YELLOW), this.font), LayoutSettings.defaults().alignHorizontallyCenter());
         footer.addChild(Button.builder(Component.translatable("gui.done"), (btn) -> onClose()).width(200).build());
 
         layout.visitWidgets(this::addRenderableWidget);
 
         repositionElements();
+    }
+
+    private static Checkbox createCheckBox(Component title, boolean initialValue, Tooltip tooltip){
+        Checkbox box = new Checkbox(0,0,20,20,title,initialValue);
+        box.setTooltip(tooltip);
+        return box;
     }
 
     protected void repositionElements() {
@@ -85,6 +68,7 @@ public class ClientConfigScreen extends Screen {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float pt) {
+        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 15, 16777215);
         super.render(guiGraphics, mouseX, mouseY, pt);
     }
 

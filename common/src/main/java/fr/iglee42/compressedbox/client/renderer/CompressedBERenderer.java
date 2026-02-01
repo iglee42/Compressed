@@ -67,7 +67,7 @@ public class CompressedBERenderer implements BlockEntityRenderer<CompressedBlock
                 renderBlock(blockInfo.state(), pos, poseStack, buffer,light,overlay);
 
                 if (blockInfo.nbt() != null && !blockInfo.nbt().isEmpty()) {
-                    BlockEntity te = BlockEntity.loadStatic(pos,blockInfo.state(),blockInfo.nbt(),minecraft.level.registryAccess());
+                    BlockEntity te = BlockEntity.loadStatic(pos,blockInfo.state(),blockInfo.nbt());
 
                     if (!(te instanceof CompressedBlockEntity)) {
 

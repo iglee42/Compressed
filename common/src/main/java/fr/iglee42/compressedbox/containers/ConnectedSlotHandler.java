@@ -3,6 +3,7 @@ package fr.iglee42.compressedbox.containers;
 import fr.iglee42.compressedbox.blockentities.modules.SlotModule;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -87,10 +88,6 @@ public class ConnectedSlotHandler implements Container {
             }
         });
         return blocks;
-    }
-
-    public List<ItemStack> getItems(){
-        return getBlockEntities().stream().flatMap(be->be.getHandler().getItems().stream()).toList();
     }
 
 }

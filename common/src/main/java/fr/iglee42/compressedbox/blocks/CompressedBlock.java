@@ -3,7 +3,6 @@ package fr.iglee42.compressedbox.blocks;
 import dev.architectury.platform.Platform;
 import fr.iglee42.compressedbox.blockentities.CompressedBlockEntity;
 import fr.iglee42.compressedbox.registries.CBlockEntities;
-import fr.iglee42.compressedbox.registries.CDataComponents;
 import fr.iglee42.compressedbox.utils.Box;
 import fr.iglee42.compressedbox.utils.BoxesSaveData;
 import net.minecraft.ChatFormatting;
@@ -11,14 +10,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -32,6 +30,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class CompressedBlock extends Block implements EntityBlock {
+
+    public static final String BOX_ID_NBT_KEY = "boxID";
+
     public CompressedBlock(Properties properties) {
         super(properties);
     }
@@ -42,7 +43,8 @@ public class CompressedBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
+    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+        if (!player.getItemInHand(interactionHand).isEmpty()) return InteractionResult.PASS;
         if (level.isClientSide) return InteractionResult.sidedSuccess(true);
         if (!(level.getBlockEntity(blockPos) instanceof CompressedBlockEntity be)) return InteractionResult.PASS;
         ServerLevel sLevel = (ServerLevel) level;
@@ -64,25 +66,32 @@ public class CompressedBlock extends Block implements EntityBlock {
         }
         box.teleportPlayerIn(player,sLevel);
         if (Platform.isDevelopmentEnvironment()) player.displayClientMessage(box.getName().copy().append( Component.literal( ": " + box.getId())),true);
-        return super.useWithoutItem(blockState, level, blockPos, player, blockHitResult);
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public ItemStack getCloneItemStack(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
-        ItemStack stack = super.getCloneItemStack(levelReader,blockPos,blockState);
-        levelReader.getBlockEntity(blockPos, CBlockEntities.COMPRESSED.get()).ifPresent(be->{
-            if (be.getBoxID() != null) stack.set(CDataComponents.BOX_ID.get(),be.getBoxID());
+    public ItemStack getCloneItemStack(BlockGetter blockGetter, BlockPos blockPos, BlockState blockState) {
+        ItemStack stack = super.getCloneItemStack(blockGetter,blockPos,blockState);
+        blockGetter.getBlockEntity(blockPos, CBlockEntities.COMPRESSED.get()).ifPresent(be->{
+            if (be.getBoxID() != null) stack.getOrCreateTag().putUUID(BOX_ID_NBT_KEY,be.getBoxID());
         });
         return stack;
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext ctx, List<Component> tooltips, TooltipFlag flags) {
-        super.appendHoverText(stack, ctx, tooltips, flags);
-        if (stack.has(CDataComponents.BOX_ID.get())){
-            UUID boxId = stack.get(CDataComponents.BOX_ID.get());
-            tooltips.add(Component.literal("Box ID : " + boxId));
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> tooltips, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, blockGetter, tooltips, tooltipFlag);
+        UUID boxID;
+        if ((boxID = getBoxIDFromStack(stack)) != null){
+            tooltips.add(Component.literal("Box ID : " + boxID));
         }
+    }
+
+    public static @Nullable UUID getBoxIDFromStack(ItemStack stack){
+        if (!stack.hasTag()) return null;
+        if (stack.getTag() == null) return null;
+        if (!stack.getTag().hasUUID(BOX_ID_NBT_KEY)) return null;
+        return stack.getTag().getUUID(BOX_ID_NBT_KEY);
     }
 
     @Override
@@ -91,12 +100,13 @@ public class CompressedBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected boolean propagatesSkylightDown(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+    public boolean propagatesSkylightDown(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
         return true;
     }
 
     @Override
-    protected float getShadeBrightness(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+    public float getShadeBrightness(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
         return 1.0f;
     }
+
 }

@@ -95,15 +95,15 @@ public class ChunkLoadModule extends Module {
     }
 
     @Override
-    protected void load(CompoundTag tag, HolderLookup.Provider registries) {
-        super.load(tag, registries);
+    protected void loadModule(CompoundTag tag) {
+        super.loadModule(tag);
         if (tag.contains("remaining")) setRemaining(tag.getFloat("remaining"));
         if (tag.contains("remainingTime")) setRemainingTime(tag.getInt("remainingTime"));
     }
 
     @Override
-    protected void save(CompoundTag tag, HolderLookup.Provider registries, boolean forClient) {
-        super.save(tag, registries, forClient);
+    protected void save(CompoundTag tag, boolean forClient) {
+        super.save(tag, forClient);
         if (forClient){
             tag.putFloat("remaining",remaining);
             tag.putInt("remainingTime",remainingTime);

@@ -9,7 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -39,14 +39,17 @@ public class ChunkLoaderModuleBlock extends ModuleBlock<ChunkLoadModule> {
         super.createBlockStateDefinition(builder.add(CHARGES));
     }
 
-    protected ItemInteractionResult useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+    @Override
+    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+        ItemStack itemStack = player.getItemInHand(interactionHand);
         if (isFuel(itemStack) && canBeCharged(level,blockState,blockPos)) {
             charge(player, level, blockPos, blockState);
-            itemStack.consume(1, player);
-            return ItemInteractionResult.sidedSuccess(level.isClientSide);
-        } else {
-            return interactionHand == InteractionHand.MAIN_HAND && isFuel(player.getItemInHand(InteractionHand.OFF_HAND)) && canBeCharged(level,blockState,blockPos) ? ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            if (!player.getAbilities().instabuild) {
+                itemStack.shrink(1);
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
+        return InteractionResult.PASS;
     }
 
     private static boolean isFuel(ItemStack itemStack) {
@@ -67,7 +70,7 @@ public class ChunkLoaderModuleBlock extends ModuleBlock<ChunkLoadModule> {
     }
 
     @Override
-    protected void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
+    public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
         if (!level.isClientSide){
             ChunkPos pos = new ChunkPos(blockPos);
             ((ServerLevel)level).setChunkForced(pos.x,pos.z,false);

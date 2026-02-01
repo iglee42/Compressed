@@ -10,7 +10,8 @@ import fr.iglee42.compressedbox.utils.Box;
 import fr.iglee42.compressedbox.utils.Services;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.LayeredDraw;
+
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.network.chat.ClickEvent;
@@ -26,20 +27,20 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BoxHud {
 
-    private static final ResourceLocation HOTBAR_SPRITE = ResourceLocation.withDefaultNamespace("hud/hotbar");
-    private static final ResourceLocation HOTBAR_SELECTION_SPRITE = ResourceLocation.withDefaultNamespace("hud/hotbar_selection");
+    private static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/widgets.png");
 
     private static int tickPressed = 0;
     private static final int ANIMATION_TIME = 20;
     public static int selectedSlot = 0;
 
-    public static final LayeredDraw.Layer HUD = (gui, p_316643_) -> {
+    public static final Consumer<GuiGraphics> HUD = gui -> {
         if (Minecraft.getInstance().options.hideGui) return;
         if (Minecraft.getInstance().level == null || !Minecraft.getInstance().level.dimension().equals(Box.DIMENSION)) return;
         if (CompressedClient.currentBox == null) return;
@@ -61,14 +62,14 @@ public class BoxHud {
             float progress = (float) tickPressed / ANIMATION_TIME;
             gui.pose().translate(0,-height * (1-progress),0);
         }
-        gui.blitSprite(HOTBAR_SPRITE, (gui.guiWidth() / 2) -91,0,182, 22 );
-        gui.blitSprite(HOTBAR_SELECTION_SPRITE, (gui.guiWidth() / 2) - 91 - 1 + selectedSlot * 20,  -1, 24, 23);
+        gui.blit(WIDGETS_LOCATION, (gui.guiWidth() / 2) -91,0,0,0,182, 22 );
+        gui.blit(WIDGETS_LOCATION, (gui.guiWidth() / 2) - 91 - 1 + selectedSlot * 20,  -1,0,22, 24, 23);
         gui.fill((gui.guiWidth() / 2) - 91 - 1 + selectedSlot * 20,  height - 2, (gui.guiWidth() / 2) - 91 - 1 + selectedSlot * 20 + 24, height - 1, 0xFF000000);
 
         int x = (gui.guiWidth() / 2) - 91;
 
         for (ResourceLocation sprite : Arrays.stream(MenuAction.values()).map(MenuAction::getSprite).toList()) {
-            gui.blitSprite(sprite,x + 3, 3,16,16 );
+            gui.blit(sprite,x + 3, 3,0,0,16,16,16,16);
             x+=20;
         }
 
@@ -172,7 +173,7 @@ public class BoxHud {
         }
 
         private ResourceLocation getSprite(){
-            return ResourceLocation.fromNamespaceAndPath(CompressedBox.MODID,icon);
+            return new ResourceLocation(CompressedBox.MODID,icon);
         }
 
         private boolean execute(){

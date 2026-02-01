@@ -35,13 +35,13 @@ public class ModuleBlock<T extends Module> extends Block implements EntityBlock 
     }
 
     @Override
-    protected void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
+    public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
         super.onPlace(blockState, level, blockPos, blockState2, bl);
 
     }
 
     @Override
-    protected void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
+    public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
         if (!level.isClientSide && level.dimension().equals(Box.DIMENSION) && BoxesSaveData.get(level).getBoxByBlockPos(blockPos) != null && level.getBlockEntity(blockPos) instanceof Module be)
             be.removed();
         super.onRemove(blockState, level, blockPos, blockState2, bl);

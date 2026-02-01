@@ -24,8 +24,6 @@ public class CHelpScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        LinearLayout linearLayout = this.layout.addToHeader(LinearLayout.vertical().spacing(8));
-        linearLayout.addChild(new StringWidget(getTitle(), this.font), LayoutSettings::alignHorizontallyCenter);
         GridLayout gridLayout = new GridLayout();
         gridLayout.defaultCellSetting().paddingHorizontal(4).paddingBottom(4).alignHorizontallyLeft();
         GridLayout.RowHelper rowHelper = gridLayout.createRowHelper(1);
@@ -49,6 +47,7 @@ public class CHelpScreen extends Screen {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float pt) {
+        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 15, 16777215);
         super.render(guiGraphics, mouseX, mouseY, pt);
 
     }

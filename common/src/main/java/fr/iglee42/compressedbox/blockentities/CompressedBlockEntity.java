@@ -2,15 +2,12 @@ package fr.iglee42.compressedbox.blockentities;
 
 import com.mojang.datafixers.util.Pair;
 import fr.iglee42.compressedbox.registries.CBlockEntities;
-import fr.iglee42.compressedbox.registries.CDataComponents;
 import fr.iglee42.compressedbox.utils.Box;
 import fr.iglee42.compressedbox.utils.BoxesSaveData;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -47,8 +44,8 @@ public class CompressedBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         if (boxID != null) {
             tag.putUUID("boxID",boxID);
         }
@@ -57,15 +54,14 @@ public class CompressedBlockEntity extends BlockEntity {
     }
 
 
-
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         if (tag.contains("boxID")) setBoxID(tag.getUUID("boxID"));
 
-        if (tag.contains("box")) setClientBox(Box.CODEC.decode(RegistryOps.create(NbtOps.INSTANCE,registries),tag.get("box")).mapOrElse(Pair::getFirst,e->null));
-        if (tag.contains("structureInside")){
-            registries.lookup(Registries.BLOCK).ifPresent(h->{
+        if (tag.contains("box") && level!= null && level.isClientSide) setClientBox(Box.CODEC.decode(RegistryOps.create(NbtOps.INSTANCE,level.registryAccess()),tag.get("box")).result().map(Pair::getFirst).orElse(null));
+        if (tag.contains("structureInside") && level != null && level.isClientSide){
+            level.registryAccess().lookup(Registries.BLOCK).ifPresent(h->{
                 StructureTemplate template = new StructureTemplate();
                 template.load(h,tag.getCompound("structureInside"));
                 setInsideStructure(template);
@@ -74,22 +70,10 @@ public class CompressedBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput arg) {
-        super.applyImplicitComponents(arg);
-        setBoxID(arg.getOrDefault(CDataComponents.BOX_ID.get(),null));
-    }
-
-    @Override
-    protected void collectImplicitComponents(DataComponentMap.Builder builder) {
-        super.collectImplicitComponents(builder);
-        if (boxID != null) builder.set(CDataComponents.BOX_ID.get(),boxID);
-    }
-
-    @Override
-    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider provider) {
-        CompoundTag tag = saveWithoutMetadata(provider);
+    public @NotNull CompoundTag getUpdateTag() {
+        CompoundTag tag = saveWithoutMetadata();
         if (level != null && !level.isClientSide && getBox() != null){
-            tag.put("box",Box.CODEC.encodeStart(RegistryOps.create(NbtOps.INSTANCE,provider),getBox()).mapOrElse(Function.identity(),e->new CompoundTag()));
+            tag.put("box",Box.CODEC.encodeStart(RegistryOps.create(NbtOps.INSTANCE,level.registryAccess()),getBox()).result().map(Function.identity()).orElse(new CompoundTag()));
 
             StructureTemplate template = getBox().createServerStructureTemplate((ServerLevel) level);
             if (template != null)

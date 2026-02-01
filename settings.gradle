@@ -11,4 +11,4 @@ rootProject.name = 'Compressed Box'
 
 include 'common'
 include 'fabric'
-include 'neoforge'
+include 'forge'

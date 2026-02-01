@@ -1,20 +1,21 @@
-package fr.iglee42.compressedbox.neoforge.client;
+package fr.iglee42.compressedbox.forge.client;
 
 import fr.iglee42.compressedbox.config.CClientConfig;
 import fr.iglee42.compressedbox.config.CConfigComments;
-import net.neoforged.neoforge.common.ModConfigSpec;
-
-public class CompressedClientConfigNeoForge {
+import net.minecraftforge.common.ForgeConfigSpec;
 
 
-    public static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
-    public static final ModConfigSpec SPEC;
+public class CompressedClientConfigForge {
 
-    public static final ModConfigSpec.BooleanValue boxDisplayName;
-    public static final ModConfigSpec.BooleanValue boxDisplayPreview;
-    public static final ModConfigSpec.BooleanValue alwaysDisplayBoxInformation;
-    public static final ModConfigSpec.BooleanValue chunkLoaderDisplayBeaconBeam;
-    public static final ModConfigSpec.BooleanValue chunkLoaderDisplayTime;
+
+    public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+    public static final ForgeConfigSpec SPEC;
+
+    public static final ForgeConfigSpec.BooleanValue boxDisplayName;
+    public static final ForgeConfigSpec.BooleanValue boxDisplayPreview;
+    public static final ForgeConfigSpec.BooleanValue alwaysDisplayBoxInformation;
+    public static final ForgeConfigSpec.BooleanValue chunkLoaderDisplayBeaconBeam;
+    public static final ForgeConfigSpec.BooleanValue chunkLoaderDisplayTime;
 
     static {
         BUILDER.push("CompressedBox Client Config");

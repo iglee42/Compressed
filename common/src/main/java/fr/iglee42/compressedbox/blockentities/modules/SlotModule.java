@@ -21,15 +21,15 @@ public class SlotModule extends Module {
     }
 
     @Override
-    protected void save(CompoundTag tag, HolderLookup.Provider registries, boolean forClient) {
-        super.save(tag, registries, forClient);
-        tag.put("Inventory",handler.createTag(registries));
+    protected void save(CompoundTag tag, boolean forClient) {
+        super.save(tag, forClient);
+        tag.put("Inventory",handler.createTag());
     }
 
     @Override
-    protected void load(CompoundTag tag, HolderLookup.Provider registries) {
-        super.load(tag, registries);
-        handler.fromTag(tag.getList("Inventory", Tag.TAG_COMPOUND),registries);
+    protected void loadModule(CompoundTag tag) {
+        super.loadModule(tag);
+        handler.fromTag(tag.getList("Inventory", Tag.TAG_COMPOUND));
     }
 
     @Override

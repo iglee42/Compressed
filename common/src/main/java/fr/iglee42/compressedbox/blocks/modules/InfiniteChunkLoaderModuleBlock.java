@@ -28,7 +28,7 @@ public class InfiniteChunkLoaderModuleBlock extends ModuleBlock<InfiniteChunkLoa
     }
 
     @Override
-    protected void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
+    public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
         if (!level.isClientSide){
             ChunkPos pos = new ChunkPos(blockPos);
             ((ServerLevel)level).setChunkForced(pos.x,pos.z,false);
