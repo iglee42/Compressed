@@ -16,6 +16,7 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.datafix.DataFixTypes;
@@ -56,7 +57,7 @@ public class BoxesSaveData extends SavedData {
             UUID uuid = UUID.fromString(k);
             CompoundTag entry = entries.getCompound(k);
             BlockPos pos = NbtUtils.readBlockPos(entry.getCompound("pos"));
-            ResourceKey<Level> level = ResourceKey.codec(Registries.DIMENSION).decode(RegistryOps.create(NbtOps.INSTANCE,storageLevel.registryAccess()),entry.get("dimension")).result().map(Pair::getFirst).orElse(null);
+            ResourceKey<Level> level = ResourceKey.create(Registries.DIMENSION, ResourceLocation.tryParse(entry.getString("dimension")));
 
             if (pos != null && level != null){
                 playerEntries.put(uuid,Pair.of(level,pos));
@@ -86,7 +87,7 @@ public class BoxesSaveData extends SavedData {
         playerEntries.forEach((uuid,p)->{
             CompoundTag entry = new CompoundTag();
             entry.put("pos",NbtUtils.writeBlockPos(p.getSecond()));
-            entry.put("dimension",ResourceKey.codec(Registries.DIMENSION).encodeStart(RegistryOps.create(NbtOps.INSTANCE,registries),p.getFirst()).getOrThrow());
+            entry.putString("dimension",p.getFirst().location().toString());
 
             entries.put(uuid.toString(),entry);
         });
@@ -123,10 +124,16 @@ public class BoxesSaveData extends SavedData {
     }
 
     private ChunkPos getNextPos(){
-        while (boxes.stream().anyMatch(b->new ChunkPos(b.getCenterPos(64)).distanceSquared(lastPos) < BOXES_OFFSET)){
+        while (boxes.stream().anyMatch(b->distanceSquared(new ChunkPos(b.getCenterPos(64)),lastPos) < BOXES_OFFSET)){
             lastPos = new ChunkPos(lastPos.x + BOXES_OFFSET,lastPos.z + BOXES_OFFSET);
         }
         return lastPos;
+    }
+
+    private long distanceSquared(ChunkPos a, ChunkPos b){
+        long dx = a.x - b.x;
+        long dz = a.z - b.z;
+        return dx * dx + dz * dz;
     }
 
     public @Nullable Pair<ResourceKey<Level>,BlockPos> getPlayerEntryPoint(Player player){

@@ -47,7 +47,7 @@ public class ClientConfigScreen extends Screen {
 
 
         layout.addToContents(gridLayout);
-        LinearLayout footer = this.layout.addToFooter(LinearLayout.vertical().spacing(8));
+        LinearLayout footer = this.layout.addToFooter(new LinearLayout(0,0, LinearLayout.Orientation.VERTICAL));
         footer.addChild(new StringWidget(Component.translatable("gui.compressedbox.client_config.global_warning").withStyle(ChatFormatting.YELLOW), this.font), LayoutSettings.defaults().alignHorizontallyCenter());
         footer.addChild(Button.builder(Component.translatable("gui.done"), (btn) -> onClose()).width(200).build());
 
