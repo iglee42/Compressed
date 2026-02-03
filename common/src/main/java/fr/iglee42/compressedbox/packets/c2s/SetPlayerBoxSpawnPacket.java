@@ -1,23 +1,31 @@
-package fr.iglee42.compressedbox.packets.handlers.c2s;
+package fr.iglee42.compressedbox.packets.c2s;
 
 import dev.architectury.networking.NetworkManager;
-import fr.iglee42.compressedbox.packets.payloads.c2s.SetPlayerBoxSpawnPayload;
 import fr.iglee42.compressedbox.utils.Box;
 import fr.iglee42.compressedbox.utils.BoxesSaveData;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
+import java.util.function.Supplier;
 
-public class SetPlayerBoxSpawnHandler {
 
-    private static final SetPlayerBoxSpawnHandler INSTANCE = new SetPlayerBoxSpawnHandler();
+public class SetPlayerBoxSpawnPacket {
 
-    public static SetPlayerBoxSpawnHandler instance(){
-        return INSTANCE;
+    public static final SetPlayerBoxSpawnPacket INSTANCE = new SetPlayerBoxSpawnPacket();
+
+    public SetPlayerBoxSpawnPacket(FriendlyByteBuf buf) {
     }
 
-    public void handle(final SetPlayerBoxSpawnPayload payload, final NetworkManager.PacketContext context) {
+    private SetPlayerBoxSpawnPacket() {
+    }
+
+    public void encode(FriendlyByteBuf buf) {}
+
+
+    public void handle(Supplier<NetworkManager.PacketContext> ctx) {
+        NetworkManager.PacketContext context = ctx.get();
         context.queue(()->{
             ServerPlayer player = (ServerPlayer) context.getPlayer();
             BoxesSaveData data = BoxesSaveData.get(player.level());

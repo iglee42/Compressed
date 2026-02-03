@@ -1,12 +1,10 @@
 package fr.iglee42.compressedbox.utils;
 
 import com.google.gson.*;
-import com.mojang.serialization.JsonOps;
 import fr.iglee42.compressedbox.CompressedBox;
 import fr.iglee42.compressedbox.client.gui.CTutorialScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -26,7 +24,7 @@ public class TutorialRegistry extends SimpleJsonResourceReloadListener {
     public static void loadTutorials(ResourceManager manager) {
         String lang = Minecraft.getInstance().options.languageCode;
 
-        ResourceLocation file = ResourceLocation.fromNamespaceAndPath(CompressedBox.MODID, "compressed_tutorials/" + lang + ".json");
+        ResourceLocation file = new ResourceLocation(CompressedBox.MODID, "compressed_tutorials/" + lang + ".json");
 
         try {
             Optional<Resource> optional = manager.getResource(file);
@@ -67,7 +65,7 @@ public class TutorialRegistry extends SimpleJsonResourceReloadListener {
         JsonObject obj = el.getAsJsonObject();
 
         if (obj.has("text") || obj.has("translate") || obj.has("keybind") || obj.has("score") || obj.has("selector")) {
-            return ComponentSerialization.CODEC.parse(JsonOps.INSTANCE, obj).mapOrElse(c -> c, err -> Component.literal("Failed to load tutorial line."));
+            return Component.Serializer.fromJson(obj);
         }
 
         return Component.literal("Invalid tutorial line.");

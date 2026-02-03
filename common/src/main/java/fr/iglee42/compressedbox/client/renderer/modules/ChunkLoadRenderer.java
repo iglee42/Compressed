@@ -19,6 +19,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 
 public class ChunkLoadRenderer<T extends ChunkLoadModule> implements BlockEntityRenderer<T> {
 
@@ -54,17 +55,21 @@ public class ChunkLoadRenderer<T extends ChunkLoadModule> implements BlockEntity
     }
 
     protected void renderNameTag(Minecraft minecraft,  Component component, PoseStack poseStack, MultiBufferSource buffer, int light) {
+        Font fontRenderer = minecraft.font;
+        Quaternionf cameraRotation = minecraft.getEntityRenderDispatcher().cameraOrientation();
+
         poseStack.pushPose();
-        poseStack.translate(0.5f, 1.4f, 0.5f);
-        poseStack.mulPose(minecraft.getEntityRenderDispatcher().cameraOrientation());
-        poseStack.scale(0.025F, -0.025F, 0.025F);
+        poseStack.translate(0.5F, 1.4F, 0.5F);
+        poseStack.mulPose(cameraRotation);
+        poseStack.scale(-0.025F, -0.025F, 0.025F);
         Matrix4f matrix4f = poseStack.last().pose();
-        float bgOpacity = Minecraft.getInstance().options.getBackgroundOpacity(0.25F);
-        int alpha = (int)(bgOpacity * 255.0F) << 24;
-        Font font = minecraft.font;
-        float offset = (float)(-font.width(component) / 2);
-        font.drawInBatch(component, offset, 0, 553648127, false, matrix4f, buffer,  Font.DisplayMode.SEE_THROUGH , alpha, LightTexture.FULL_BRIGHT);
-        font.drawInBatch(component, offset, 0, -1, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, LightTexture.FULL_BRIGHT);
+        float backgroundOpacity = minecraft.options.getBackgroundOpacity(0.25F);
+        int alpha = (int) (backgroundOpacity * 255.0F) << 24;
+        float textOffset = -fontRenderer.width(component) / 2;
+        buffer = Minecraft.getInstance().renderBuffers().outlineBufferSource();
+        fontRenderer.drawInBatch(component, textOffset, 0F, 553648127, false, matrix4f, buffer, Font.DisplayMode.SEE_THROUGH, alpha, 0xFFFFFF);
+        fontRenderer.drawInBatch(component, textOffset, 0F, -1, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, 0xFFFFFF);
+
         poseStack.popPose();
     }
 

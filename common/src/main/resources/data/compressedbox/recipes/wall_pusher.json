@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "id": "compressedbox:wall_pusher",
+    "item": "compressedbox:wall_pusher",
     "count": 2
   }
 }

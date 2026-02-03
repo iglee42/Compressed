@@ -3,22 +3,18 @@ package fr.iglee42.compressedbox.client;
 import dev.architectury.event.EventResult;
 import dev.architectury.event.events.client.ClientChatEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
-import dev.architectury.networking.NetworkManager;
 import dev.architectury.platform.Platform;
 import dev.architectury.registry.ReloadListenerRegistry;
 import dev.architectury.registry.client.rendering.BlockEntityRendererRegistry;
 import dev.architectury.registry.client.rendering.RenderTypeRegistry;
 import fr.iglee42.compressedbox.CompressedBox;
-import fr.iglee42.compressedbox.client.renderer.modules.ChunkLoadRenderer;
 import fr.iglee42.compressedbox.client.renderer.CompressedBERenderer;
+import fr.iglee42.compressedbox.client.renderer.modules.ChunkLoadRenderer;
 import fr.iglee42.compressedbox.client.renderer.modules.SlotRenderer;
-import fr.iglee42.compressedbox.packets.handlers.s2c.OpenClientConfigScreenHandler;
-import fr.iglee42.compressedbox.packets.handlers.s2c.OpenTutorialScreenHandler;
-import fr.iglee42.compressedbox.packets.handlers.s2c.SyncPlayerCurrentBoxHandler;
-import fr.iglee42.compressedbox.packets.payloads.c2s.SetBoxNamePayload;
-import fr.iglee42.compressedbox.packets.payloads.s2c.*;
+import fr.iglee42.compressedbox.packets.c2s.SetBoxNamePacket;
 import fr.iglee42.compressedbox.registries.CBlockEntities;
 import fr.iglee42.compressedbox.registries.CBlocks;
+import fr.iglee42.compressedbox.registries.CNetworking;
 import fr.iglee42.compressedbox.utils.Box;
 import fr.iglee42.compressedbox.utils.TutorialRegistry;
 import net.minecraft.ChatFormatting;
@@ -37,12 +33,6 @@ public class CompressedClient {
     public static final KeyMapping SHOW_BOX_HUD = new KeyMapping("keybind.compressedbox.show_hud", GLFW.GLFW_KEY_LEFT_ALT,"keybind.compressedbox.category");
 
     public static void init(){
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, SyncPlayerCurrentBoxPayload.TYPE,SyncPlayerCurrentBoxPayload.STREAM_CODEC, SyncPlayerCurrentBoxHandler.instance()::handle);
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, ClearPlayerCurrentBoxPayload.TYPE,ClearPlayerCurrentBoxPayload.STREAM_CODEC, SyncPlayerCurrentBoxHandler.instance()::handleClear);
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, OpenClientConfigScreenPayload.TYPE,OpenClientConfigScreenPayload.STREAM_CODEC, OpenClientConfigScreenHandler.instance()::handle);
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, OpenTutorialScreenPayload.TYPE,OpenTutorialScreenPayload.STREAM_CODEC, OpenTutorialScreenHandler.instance()::handle);
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CopyToClipboardPayload.TYPE,CopyToClipboardPayload.STREAM_CODEC, (packet,ctx)->ctx.queue(()->Minecraft.getInstance().keyboardHandler.setClipboard(packet.toCopy())));
-
         ClientTickEvent.CLIENT_POST.register(e->{
             if (nameEditCountdown > 0) nameEditCountdown--;
             if (nameEditCountdown == 0){
@@ -59,7 +49,7 @@ public class CompressedClient {
                 nameEditCountdown = -1;
                 return EventResult.interruptFalse();
             }
-            NetworkManager.sendToServer(new SetBoxNamePayload(currentBox.getId(),msg));
+            CNetworking.CHANNEL.sendToServer(new SetBoxNamePacket(currentBox.getId(),msg));
             nameEditCountdown = -1;
             return EventResult.interruptFalse();
         });

@@ -1,17 +1,17 @@
 package fr.iglee42.compressedbox.utils;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.architectury.networking.NetworkManager;
 import fr.iglee42.compressedbox.CompressedBox;
 import fr.iglee42.compressedbox.containers.ConnectedSlotHandler;
-import fr.iglee42.compressedbox.packets.payloads.s2c.OpenTutorialScreenPayload;
+import fr.iglee42.compressedbox.packets.s2c.OpenTutorialScreenPacket;
+import fr.iglee42.compressedbox.registries.CNetworking;
 import lombok.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -25,9 +25,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Function;
 
 @Getter
 @Setter
@@ -39,17 +39,6 @@ public class Box {
     public static final int MAX_BOX_SIZE = 32;
 
     public static final ResourceKey<Level> DIMENSION = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(CompressedBox.MODID, "compressed"));
-
-    public static final Codec<Box> CODEC = RecordCodecBuilder.create(instance ->
-            instance.group(
-                    UUIDUtil.CODEC.optionalFieldOf("id", UUID.randomUUID()).forGetter(Box::getId),
-                    Codec.STRING.fieldOf("name").forGetter(Box::getRawName),
-                    UUIDUtil.CODEC.fieldOf("owner").forGetter(Box::getOwner),
-                    BlockPos.CODEC.fieldOf("minPos").forGetter(Box::getMinPos),
-                    BlockPos.CODEC.fieldOf("maxPos").forGetter(Box::getMaxPos),
-                    Codec.unboundedMap(UUIDUtil.STRING_CODEC, BlockPos.CODEC).xmap(HashMap::new, Function.identity()).fieldOf("playersEnters").forGetter(Box::getPlayersEnters))
-                    .apply(instance, Box::new));
-
 
     @Builder.Default
     private final UUID id = UUID.randomUUID();
@@ -63,6 +52,16 @@ public class Box {
     public static Box decode(FriendlyByteBuf buffer){
         return new Box(buffer.readUUID(),buffer.readUtf(),buffer.readUUID(),buffer.readBlockPos(),buffer.readBlockPos(),new HashMap<>(buffer.readMap(FriendlyByteBuf::readUUID, FriendlyByteBuf::readBlockPos)));
     }
+
+    public static Box load(CompoundTag tag){
+        Map<UUID,BlockPos> playersEnters = new HashMap<>();
+        ListTag entries = tag.getList("playersEnters", CompoundTag.TAG_COMPOUND);
+        entries.stream().map(CompoundTag.class::cast).forEach(enter->{
+            playersEnters.put(enter.getUUID("player"), NbtUtils.readBlockPos(enter.getCompound("pos")));
+        });
+        return new Box(tag.getUUID("id"), tag.getString("name"), tag.getUUID("owner"), NbtUtils.readBlockPos(tag.getCompound("minPos")),NbtUtils.readBlockPos(tag.getCompound("maxPos")),new HashMap<>(playersEnters));
+    }
+
 
 
     protected void generate(Level level) {
@@ -101,6 +100,25 @@ public class Box {
         buffer.writeMap(getPlayersEnters(), FriendlyByteBuf::writeUUID, FriendlyByteBuf::writeBlockPos);
     }
 
+    public CompoundTag save(){
+        CompoundTag tag = new CompoundTag();
+        tag.putUUID("id",getId());
+        tag.putString("name",getRawName());
+        tag.putUUID("owner",getOwner());
+        tag.put("minPos",NbtUtils.writeBlockPos(getMinPos()));
+        tag.put("maxPos",NbtUtils.writeBlockPos(getMaxPos()));
+
+        ListTag entries = new ListTag();
+        getPlayersEnters().forEach((uuid,pos)->{
+            CompoundTag enter = new CompoundTag();
+            enter.putUUID("player",uuid);
+            enter.put("pos",NbtUtils.writeBlockPos(pos));
+            entries.add(enter);
+        });
+        tag.put("playersEnters",entries);
+        return tag;
+    }
+
 
     public void teleportPlayerIn(Player player, ServerLevel level) {
         BoxesSaveData manager = BoxesSaveData.get(level);
@@ -115,7 +133,7 @@ public class Box {
         player.teleportTo(dimension, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, Set.of(), player.getXRot(), player.getYRot());
 
         if (manager.isPlayerNew(player)) {
-            NetworkManager.sendToPlayer((ServerPlayer) player, OpenTutorialScreenPayload.INSTANCE);
+            CNetworking.CHANNEL.sendToPlayer((ServerPlayer) player, OpenTutorialScreenPacket.INSTANCE);
             manager.registerKnownPlayer(player);
         }
     }

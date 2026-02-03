@@ -58,12 +58,18 @@ public abstract class Module extends BlockEntity {
     }
 
     protected void loadModule(CompoundTag tag){
-        if (tag.contains("box") && level != null && level.isClientSide) setClientBox(Box.CODEC.decode(RegistryOps.create(NbtOps.INSTANCE,level.registryAccess()),tag.get("box")).result().map(Pair::getFirst).orElse(null));
+        if (tag.contains("box") && level != null && level.isClientSide) {
+            try {
+                setClientBox(Box.load(tag.getCompound("box")));
+            } catch (Exception e){
+                setClientBox(null);
+            }
+        }
     }
 
     protected void save(CompoundTag tag, boolean forClient){
         if (forClient && getBox() != null && level != null){
-            tag.put("box",Box.CODEC.encodeStart(RegistryOps.create(NbtOps.INSTANCE,level.registryAccess()),getBox()).result().map(Function.identity()).orElse(new CompoundTag()));
+            tag.put("box",getBox().save());
         }
     }
 

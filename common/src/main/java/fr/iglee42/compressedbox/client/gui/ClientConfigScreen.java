@@ -38,12 +38,11 @@ public class ClientConfigScreen extends Screen {
         GridLayout.RowHelper rowHelper = gridLayout.createRowHelper(1);
 
 
-
         boxRenderName = rowHelper.addChild(createCheckBox(Component.literal("Box Display Name"),CClientConfig.get().displayBoxName(),Tooltip.create(Component.literal(CConfigComments.boxDisplayName))));
-        boxRenderName = rowHelper.addChild(createCheckBox(Component.literal("Box Display Preview"),CClientConfig.get().displayBoxPreview(),Tooltip.create(Component.literal(CConfigComments.boxDisplayPreview))));
-        boxRenderName = rowHelper.addChild(createCheckBox(Component.literal("Always Display Box Information"),CClientConfig.get().alwaysDisplayBoxInformation(),Tooltip.create(Component.literal(CConfigComments.alwaysDisplayBoxInformation))));
-        boxRenderName = rowHelper.addChild(createCheckBox(Component.literal("Chunk Loader Display Beacon Beam"),CClientConfig.get().chunkLoaderDisplayBeaconBeam(),Tooltip.create(Component.literal(CConfigComments.chunkLoaderDisplayBeaconBeam))));
-        boxRenderName = rowHelper.addChild(createCheckBox(Component.literal("Chunk Loader Display Remaining Time"),CClientConfig.get().chunkLoaderDisplayTime(),Tooltip.create(Component.literal(CConfigComments.chunkLoaderDisplayTime))));
+        boxRenderPreview = rowHelper.addChild(createCheckBox(Component.literal("Box Display Preview"),CClientConfig.get().displayBoxPreview(),Tooltip.create(Component.literal(CConfigComments.boxDisplayPreview))));
+        alwaysDisplayBoxInformation = rowHelper.addChild(createCheckBox(Component.literal("Always Display Box Information"),CClientConfig.get().alwaysDisplayBoxInformation(),Tooltip.create(Component.literal(CConfigComments.alwaysDisplayBoxInformation))));
+        chunkLoaderBeam = rowHelper.addChild(createCheckBox(Component.literal("Chunk Loader Display Beacon Beam"),CClientConfig.get().chunkLoaderDisplayBeaconBeam(),Tooltip.create(Component.literal(CConfigComments.chunkLoaderDisplayBeaconBeam))));
+        chunkLoaderTime = rowHelper.addChild(createCheckBox(Component.literal("Chunk Loader Display Remaining Time"),CClientConfig.get().chunkLoaderDisplayTime(),Tooltip.create(Component.literal(CConfigComments.chunkLoaderDisplayTime))));
 
 
         layout.addToContents(gridLayout);
@@ -56,8 +55,8 @@ public class ClientConfigScreen extends Screen {
         repositionElements();
     }
 
-    private static Checkbox createCheckBox(Component title, boolean initialValue, Tooltip tooltip){
-        Checkbox box = new Checkbox(0,0,20,20,title,initialValue);
+    private Checkbox createCheckBox(Component title, boolean initialValue, Tooltip tooltip){
+        Checkbox box = new Checkbox(0,0,21 + font.width(title),20,title,initialValue);
         box.setTooltip(tooltip);
         return box;
     }

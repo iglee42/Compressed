@@ -13,11 +13,15 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "function": "minecraft:copy_components",
-              "include": [
-                "compressedbox:box_id"
-              ],
-              "source": "block_entity"
+              "function": "minecraft:copy_nbt",
+              "source": "block_entity",
+              "ops": [
+                {
+                  "source": "boxID",
+                  "target": "boxID",
+                  "op": "replace"
+                }
+              ]
             }
           ],
           "name": "compressedbox:compressed_block"

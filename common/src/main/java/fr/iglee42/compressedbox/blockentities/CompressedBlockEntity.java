@@ -59,7 +59,13 @@ public class CompressedBlockEntity extends BlockEntity {
         super.load(tag);
         if (tag.contains("boxID")) setBoxID(tag.getUUID("boxID"));
 
-        if (tag.contains("box") && level!= null && level.isClientSide) setClientBox(Box.CODEC.decode(RegistryOps.create(NbtOps.INSTANCE,level.registryAccess()),tag.get("box")).result().map(Pair::getFirst).orElse(null));
+        if (tag.contains("box") && level!= null && level.isClientSide) {
+            try {
+                setClientBox(Box.load(tag.getCompound("box")));
+            } catch (Exception e){
+                setClientBox(null);
+            }
+        }
         if (tag.contains("structureInside") && level != null && level.isClientSide){
             level.registryAccess().lookup(Registries.BLOCK).ifPresent(h->{
                 StructureTemplate template = new StructureTemplate();
@@ -73,7 +79,7 @@ public class CompressedBlockEntity extends BlockEntity {
     public @NotNull CompoundTag getUpdateTag() {
         CompoundTag tag = saveWithoutMetadata();
         if (level != null && !level.isClientSide && getBox() != null){
-            tag.put("box",Box.CODEC.encodeStart(RegistryOps.create(NbtOps.INSTANCE,level.registryAccess()),getBox()).result().map(Function.identity()).orElse(new CompoundTag()));
+            tag.put("box",getBox().save());
 
             StructureTemplate template = getBox().createServerStructureTemplate((ServerLevel) level);
             if (template != null)

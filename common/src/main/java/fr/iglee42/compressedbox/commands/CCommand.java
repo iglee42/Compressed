@@ -5,12 +5,12 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Pair;
-import dev.architectury.networking.NetworkManager;
 import fr.iglee42.compressedbox.CompressedBox;
-import fr.iglee42.compressedbox.packets.payloads.s2c.CopyToClipboardPayload;
-import fr.iglee42.compressedbox.packets.payloads.s2c.OpenClientConfigScreenPayload;
+import fr.iglee42.compressedbox.blocks.CompressedBlock;
+import fr.iglee42.compressedbox.packets.s2c.CopyToClipboardPacket;
+import fr.iglee42.compressedbox.packets.s2c.OpenClientConfigScreenPacket;
 import fr.iglee42.compressedbox.registries.CBlocks;
-import fr.iglee42.compressedbox.registries.CDataComponents;
+import fr.iglee42.compressedbox.registries.CNetworking;
 import fr.iglee42.compressedbox.utils.Box;
 import fr.iglee42.compressedbox.utils.BoxesSaveData;
 import fr.iglee42.compressedbox.utils.Services;
@@ -56,7 +56,7 @@ public class CCommand{
             sendFailure(source,Component.literal("This command can only be executed by a player."));
             return 0;
         }
-        NetworkManager.sendToPlayer(source.getPlayerOrException(), OpenClientConfigScreenPayload.INSTANCE);
+        CNetworking.CHANNEL.sendToPlayer(source.getPlayerOrException(), OpenClientConfigScreenPacket.INSTANCE);
         return 1;
     }
 
@@ -96,7 +96,7 @@ public class CCommand{
 
         source.sendSuccess(()->Component.literal(debugInfos.toString()).append(Component.literal("\nThese information were copied to be used in a bug/crash report !").withStyle(ChatFormatting.GREEN)),false);
 
-        NetworkManager.sendToPlayer(source.getPlayerOrException(),new CopyToClipboardPayload(debugInfos.toString()));
+        CNetworking.CHANNEL.sendToPlayer(source.getPlayerOrException(),new CopyToClipboardPacket(debugInfos.toString()));
         return 1;
     }
 
@@ -229,7 +229,7 @@ public class CCommand{
             debugInfos.append(Component.literal("\n[GIVE BOX]").withStyle(Style.EMPTY.
                     withBold(true)
                     .applyFormat(ChatFormatting.GREEN)
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/give @p " + CBlocks.COMPRESSED_BLOCK.getId().toString() + "[" + CDataComponents.BOX_ID.getId() + "=" + NbtUtils.createUUID(currentBox.getId()) + "]")))).append(" ");
+                    .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/give @p " + CBlocks.COMPRESSED_BLOCK.getId().toString() + "{\"" + CompressedBlock.BOX_ID_NBT_KEY + "\":" + NbtUtils.createUUID(currentBox.getId()) + "}")))).append(" ");
 
             debugInfos.append(Component.literal("[TP IN BOX]").withStyle(Style.EMPTY.
                     withBold(true)

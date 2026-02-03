@@ -2,24 +2,19 @@ package fr.iglee42.compressedbox.utils;
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
-import dev.architectury.networking.NetworkManager;
 import fr.iglee42.compressedbox.CompressedBox;
-import fr.iglee42.compressedbox.packets.payloads.s2c.ClearPlayerCurrentBoxPayload;
-import fr.iglee42.compressedbox.packets.payloads.s2c.SyncPlayerCurrentBoxPayload;
+import fr.iglee42.compressedbox.packets.s2c.ClearPlayerCurrentBoxPacket;
+import fr.iglee42.compressedbox.packets.s2c.SyncPlayerCurrentBoxPacket;
+import fr.iglee42.compressedbox.registries.CNetworking;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.resources.RegistryOps;
+import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -46,11 +41,12 @@ public class BoxesSaveData extends SavedData {
     }
 
     public BoxesSaveData(CompoundTag tag,Level storageLevel){
-        boxes = new ArrayList<>(Codec.list(Box.CODEC).decode(
-                NbtOps.INSTANCE,
-                tag.getList("boxes", CompoundTag.TAG_COMPOUND)
-        ).result().map(Pair::getFirst).orElse(new ArrayList<>()));
-        lastPos = CExtraCodecs.CHUNK_POS.decode(NbtOps.INSTANCE,tag.get("lastPos")).getOrThrow(false,e->{}).getFirst();
+        boxes = new ArrayList<>();
+        tag.getList("boxes", CompoundTag.TAG_COMPOUND).stream().map(CompoundTag.class::cast).forEach(t->{
+            boxes.add(Box.load(t));
+        });
+        CompoundTag lastPosTag = tag.getCompound("lastPos");
+        lastPos = new ChunkPos(lastPosTag.getInt("x"),lastPosTag.getInt("z"));
         playerEntries = new HashMap<>();
         CompoundTag entries = tag.getCompound("playerEntries");
         entries.getAllKeys().forEach(k->{
@@ -63,7 +59,9 @@ public class BoxesSaveData extends SavedData {
                 playerEntries.put(uuid,Pair.of(level,pos));
             }
         });
-        knownPlayers = new ArrayList<>(Codec.list(UUIDUtil.STRING_CODEC).decode(NbtOps.INSTANCE,tag.getList("knownPlayers", CompoundTag.TAG_STRING)).result().map(Pair::getFirst).orElse(new ArrayList<>()));
+        knownPlayers = new ArrayList<>();
+        ListTag knownPlayersTag = tag.getList("knownPlayers", CompoundTag.TAG_INT_ARRAY);
+        knownPlayersTag.stream().map(IntArrayTag.class::cast).forEach(t->knownPlayers.add(NbtUtils.loadUUID(t)));
     }
 
     public static BoxesSaveData get(Level level) {
@@ -77,11 +75,15 @@ public class BoxesSaveData extends SavedData {
 
     @Override
     public @NotNull CompoundTag save(CompoundTag tag) {
-        tag.put("boxes",Codec.list(Box.CODEC).encodeStart(
-                NbtOps.INSTANCE,
-                boxes
-        ).getOrThrow(false,e->{}));
-        tag.put("lastPos",CExtraCodecs.CHUNK_POS.encodeStart(NbtOps.INSTANCE,lastPos).getOrThrow(false,e->{}));
+        ListTag boxesTag = new ListTag();
+        boxes.forEach(b->{
+            boxesTag.add(b.save());
+        });
+        tag.put("boxes",boxesTag);
+        CompoundTag lastPosTag = new CompoundTag();
+        lastPosTag.putInt("x", lastPos.x);
+        lastPosTag.putInt("z", lastPos.z);
+        tag.put("lastPos",lastPosTag);
         CompoundTag entries = new CompoundTag();
 
         playerEntries.forEach((uuid,p)->{
@@ -94,7 +96,9 @@ public class BoxesSaveData extends SavedData {
 
         tag.put("playerEntries",entries);
 
-        tag.put("knownPlayers",Codec.list(UUIDUtil.STRING_CODEC).encodeStart(NbtOps.INSTANCE,knownPlayers).getOrThrow());
+        ListTag knownPlayersTag = new ListTag();
+        knownPlayers.forEach(uuid->knownPlayersTag.add(NbtUtils.createUUID(uuid)));
+        tag.put("knownPlayers",knownPlayersTag);
         return tag;
     }
 
@@ -103,9 +107,9 @@ public class BoxesSaveData extends SavedData {
       level.getServer().getPlayerList().getPlayers().forEach(sp->{
           Box box = getBoxFromPlayer(sp);
           if (box != null){
-              NetworkManager.sendToPlayer(sp,new SyncPlayerCurrentBoxPayload(box));
+              CNetworking.CHANNEL.sendToPlayer(sp,new SyncPlayerCurrentBoxPacket(box));
           } else {
-              NetworkManager.sendToPlayer(sp, ClearPlayerCurrentBoxPayload.INSTANCE);
+              CNetworking.CHANNEL.sendToPlayer(sp, ClearPlayerCurrentBoxPacket.INSTANCE);
           }
       });
     }

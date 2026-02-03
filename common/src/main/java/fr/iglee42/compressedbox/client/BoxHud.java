@@ -1,16 +1,15 @@
 package fr.iglee42.compressedbox.client;
 
-import dev.architectury.networking.NetworkManager;
 import fr.iglee42.compressedbox.CompressedBox;
 import fr.iglee42.compressedbox.client.gui.CHelpScreen;
 import fr.iglee42.compressedbox.client.gui.ClientConfigScreen;
-import fr.iglee42.compressedbox.packets.payloads.c2s.ExitPlayerFromBoxPayload;
-import fr.iglee42.compressedbox.packets.payloads.c2s.SetPlayerBoxSpawnPayload;
+import fr.iglee42.compressedbox.packets.c2s.ExitPlayerFromBoxPacket;
+import fr.iglee42.compressedbox.packets.c2s.SetPlayerBoxSpawnPacket;
+import fr.iglee42.compressedbox.registries.CNetworking;
 import fr.iglee42.compressedbox.utils.Box;
 import fr.iglee42.compressedbox.utils.Services;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
@@ -103,7 +102,7 @@ public class BoxHud {
 
     enum MenuAction{
 
-        SET_SPAWN("set_spawn",()->NetworkManager.sendToServer(SetPlayerBoxSpawnPayload.INSTANCE)),
+        SET_SPAWN("set_spawn",()-> CNetworking.CHANNEL.sendToServer(SetPlayerBoxSpawnPacket.INSTANCE)),
         SET_NAME("set_name",()->{
             if (CompressedClient.nameEditCountdown == -1) {
                 CompressedClient.nameEditCountdown = 30 * 20;
@@ -152,7 +151,7 @@ public class BoxHud {
                 Minecraft.getInstance().player.displayClientMessage(CompressedBox.PREFIX.copy().append(Component.translatable( "message.compressedbox.box_export_failed", e.getMessage()).withStyle(ChatFormatting.RED)), false);
             }
         }),
-        EXIT_BOX("leave_box",()->NetworkManager.sendToServer(ExitPlayerFromBoxPayload.INSTANCE)),
+        EXIT_BOX("leave_box",()->CNetworking.CHANNEL.sendToServer(ExitPlayerFromBoxPacket.INSTANCE)),
         CONFIGURE_MOD("configure",()->Minecraft.getInstance().setScreen(new ClientConfigScreen())),
         HELP("help",()->Minecraft.getInstance().setScreen(new CHelpScreen()))
         ;
@@ -173,7 +172,7 @@ public class BoxHud {
         }
 
         private ResourceLocation getSprite(){
-            return new ResourceLocation(CompressedBox.MODID,icon);
+            return new ResourceLocation(CompressedBox.MODID,"textures/gui/sprites/"+icon+".png");
         }
 
         private boolean execute(){
