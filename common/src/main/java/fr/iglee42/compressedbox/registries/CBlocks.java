@@ -20,8 +20,8 @@ public class CBlocks {
 
     public static final RegistrySupplier<CompressedBlock> COMPRESSED_BLOCK = createBlock("compressed_block",()->new CompressedBlock(BlockBehaviour.Properties.of().strength(2).noOcclusion()));
     public static final RegistrySupplier<SlotModuleBlock> SLOT = createBlock("slot", ()->new SlotModuleBlock(BlockBehaviour.Properties.of().strength(2)));
-    public static final RegistrySupplier<ChunkLoaderModuleBlock> CHUNK_LOADER = createBlock("chunk_loader", ()->new ChunkLoaderModuleBlock(BlockBehaviour.Properties.of().strength(2)));
-    public static final RegistrySupplier<InfiniteChunkLoaderModuleBlock> INFINITE_CHUNK_LOADER = createBlock("infinite_chunk_loader", ()->new InfiniteChunkLoaderModuleBlock(BlockBehaviour.Properties.of().strength(3)));
+    public static final RegistrySupplier<ChunkLoaderModuleBlock> CHUNK_LOADER = createBlock("chunk_loader", ()->new ChunkLoaderModuleBlock(BlockBehaviour.Properties.of().strength(2).lightLevel(bs-> RespawnAnchorBlock.getScaledChargeLevel(bs,15))));
+    public static final RegistrySupplier<InfiniteChunkLoaderModuleBlock> INFINITE_CHUNK_LOADER = createBlock("infinite_chunk_loader", ()->new InfiniteChunkLoaderModuleBlock(BlockBehaviour.Properties.of().strength(3).lightLevel(bs->15)));
 
 
     private static <T extends Block>RegistrySupplier<T> createBlock(String id, Supplier<T> builder){

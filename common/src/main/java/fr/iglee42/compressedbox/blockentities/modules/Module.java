@@ -72,13 +72,11 @@ public abstract class Module extends BlockEntity {
 
     public void tick(Level level,BlockPos pos,BlockState state){
         if (level == null) return;
+        level.sendBlockUpdated(pos,state,state,2);
         if (!level.dimension().equals(Box.DIMENSION)) return;
         if (getBox() == null) return;
         if (level.isClientSide) clientTick(level,pos,state);
-        else {
-            serverTick((ServerLevel) level, pos, state);
-            level.sendBlockUpdated(pos,state,state,2);
-        }
+        else serverTick((ServerLevel) level, pos, state);
     }
 
     @Nullable
