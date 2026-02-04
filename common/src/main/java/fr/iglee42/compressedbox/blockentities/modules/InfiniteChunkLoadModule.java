@@ -14,15 +14,11 @@ public class InfiniteChunkLoadModule extends ChunkLoadModule {
         super(CBlockEntities.INFINITE_CHUNK_LOAD.get(), blockPos, blockState);
     }
 
-    @Override
-    public void tick(Level level, BlockPos pos, BlockState state) {
-        setRemaining(1f);
-        setRemainingTime(CConfig.get().chunkLoaderChargeDuration() *20 * 4);
-        super.tick(level, pos, state);
-    }
 
     @Override
     protected void work(ServerLevel level, BlockPos pos, BlockState state, Box box) {
+        setRemaining(1f);
+        setRemainingTime(CConfig.get().chunkLoaderChargeDuration() *20 * 4);
         if (box == null){
             ChunkPos chunkPos = new ChunkPos(pos);
             level.setChunkForced(chunkPos.x,chunkPos.z,true);
