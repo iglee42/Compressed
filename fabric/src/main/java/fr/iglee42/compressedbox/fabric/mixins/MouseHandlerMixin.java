@@ -13,9 +13,9 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public class MouseHandlerMixin {
 
     @Inject(method = "onScroll",at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isSpectator()Z",shift = At.Shift.BEFORE),locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true)
-    private void updateHudMouse(long l, double d, double e, CallbackInfo ci, boolean bl, double f, double g, double h, int k, int m, int n){
+    private void updateHudMouse(long l, double d, double e, CallbackInfo ci, double f, int i){
         if (CompressedClient.SHOW_BOX_HUD.isDown()){
-            BoxHud.updateSelectedSlot(n);
+            BoxHud.updateSelectedSlot(i);
             ci.cancel();
         }
     }
