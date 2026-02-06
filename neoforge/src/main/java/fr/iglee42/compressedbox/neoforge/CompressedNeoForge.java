@@ -4,8 +4,10 @@ import fr.iglee42.compressedbox.CompressedBox;
 import fr.iglee42.compressedbox.neoforge.client.CompressedClientConfigNeoForge;
 import fr.iglee42.compressedbox.neoforge.client.CompressedClientNeoForge;
 import fr.iglee42.compressedbox.neoforge.implementations.ConnectedTankWrapper;
+import fr.iglee42.compressedbox.neoforge.implementations.FluidStackListWrapper;
 import fr.iglee42.compressedbox.neoforge.implementations.SimpleTankWrapper;
 import fr.iglee42.compressedbox.registries.CBlockEntities;
+import net.minecraft.core.NonNullList;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -13,6 +15,8 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
 
 @Mod(CompressedBox.MODID)
@@ -33,6 +37,7 @@ public final class CompressedNeoForge {
                 CBlockEntities.COMPRESSED.get(),
                 ((be,c)->{
                     if (be.getBox() == null) return null;
+                    if (be.getLevel().getServer() == null) return new ItemStackHandler(NonNullList.copyOf(be.getClientItems()));
                     if (be.getBox().getItems(be.getLevel()) == null) return null;
                     return new InvWrapper(be.getBox().getItems(be.getLevel()));
                 })
@@ -51,6 +56,7 @@ public final class CompressedNeoForge {
                 CBlockEntities.COMPRESSED.get(),
                 ((be,c)->{
                     if (be.getBox() == null) return null;
+                    if (be.getLevel().getServer() == null) return new FluidStackListWrapper(be.getClientFluids());
                     if (be.getBox().getFluids(be.getLevel()) == null) return null;
                     return new ConnectedTankWrapper(be.getBox().getFluids(be.getLevel()));
                 })
