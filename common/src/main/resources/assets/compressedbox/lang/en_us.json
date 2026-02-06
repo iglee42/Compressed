@@ -37,6 +37,7 @@
   "block.compressedbox.infinite_chunk_loader": "Infinite Chunk Loader",
   "block.compressedbox.slot": "Slot",
   "block.compressedbox.tank": "Tank",
+  "block.compressedbox.wall": "Wall",
 
   "item.compressedbox.wall_pusher": "Wall Pusher",
 
