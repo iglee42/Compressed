@@ -67,6 +67,7 @@ public class CompressedClient {
         ReloadListenerRegistry.register(PackType.CLIENT_RESOURCES,new TutorialRegistry());
         if (Platform.isFabric()) RenderTypeRegistry.register(RenderType.cutoutMipped(), CBlocks.COMPRESSED_BLOCK.get());
         if (Platform.isFabric()) RenderTypeRegistry.register(RenderType.cutoutMipped(), CBlocks.TANK.get());
+        if (Platform.isFabric()) RenderTypeRegistry.register(RenderType.cutoutMipped(), CBlocks.WALL.get());
     }
 
     public static void registerBER(){

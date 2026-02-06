@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.architectury.networking.NetworkManager;
 import fr.iglee42.compressedbox.CompressedBox;
+import fr.iglee42.compressedbox.blocks.WallBlock;
 import fr.iglee42.compressedbox.containers.ConnectedSlotHandler;
 import fr.iglee42.compressedbox.containers.fluids.ConnectedTankHandler;
 import fr.iglee42.compressedbox.packets.payloads.s2c.OpenTutorialScreenPayload;
@@ -83,16 +84,23 @@ public class Box {
         BlockPos minPos = getMinPos().offset(-1, -1, -1); // 63 + 1
         BlockPos maxPos = getMaxPos().offset(1, 1, 1); //80 - 1
 
-        BlockState bedrock = Blocks.BEDROCK.defaultBlockState();
 
         for (int x = minPos.getX(); x <= maxPos.getX(); x++) {
             for (int y = minPos.getY(); y <= maxPos.getY(); y++) {
                 for (int z = minPos.getZ(); z <= maxPos.getZ(); z++) {
-                    boolean isOnBoundary = x == minPos.getX() || x == maxPos.getX() || y == minPos.getY() || y == maxPos.getY() || z == minPos.getZ() || z == maxPos.getZ();
+                    boolean onX = x == minPos.getX() || x == maxPos.getX();
+                    boolean onY = y == minPos.getY() || y == maxPos.getY();
+                    boolean onZ = z == minPos.getZ() || z == maxPos.getZ();
+
+                    int boundaryCount = (onX ? 1 : 0) + (onY ? 1 : 0) + (onZ ? 1 : 0);
+
+                    boolean isOnBoundary = boundaryCount >= 1;
+                    boolean isOnEdge = boundaryCount == 2;
+                    boolean isOnCorner = boundaryCount == 3;
 
                     if (isOnBoundary) {
                         BlockPos pos = new BlockPos(x, y, z);
-                        dimension.setBlock(pos, bedrock, 3);
+                        dimension.setBlock(pos, WallBlock.getState( isOnEdge || isOnCorner ? 0 : 1), 3);
                     }
                 }
             }

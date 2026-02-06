@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "form=0": {
+      "model": "minecraft:block/obsidian"
+    },
+    "form=1": {
+      "model": "minecraft:block/barrier"
+    }
+  }
+}

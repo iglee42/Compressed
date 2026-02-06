@@ -1,5 +1,6 @@
 package fr.iglee42.compressedbox.items;
 
+import fr.iglee42.compressedbox.registries.CBlocks;
 import fr.iglee42.compressedbox.utils.Box;
 import fr.iglee42.compressedbox.utils.BoxesSaveData;
 import net.minecraft.ChatFormatting;
@@ -24,7 +25,7 @@ public class WallPusherItem extends Item {
         Player player = ctx.getPlayer();
 
         if (player == null) return super.useOn(ctx);
-        if (!ctx.getLevel().getBlockState(ctx.getClickedPos()).is(Blocks.BEDROCK)) return super.useOn(ctx);
+        if (!ctx.getLevel().getBlockState(ctx.getClickedPos()).is(CBlocks.WALL.get()) && !ctx.getLevel().getBlockState(ctx.getClickedPos()).is(Blocks.BEDROCK)) return super.useOn(ctx);
 
         Box box = manager.getBoxFromPlayer(player);
 

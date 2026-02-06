@@ -3,6 +3,7 @@ package fr.iglee42.compressedbox.registries;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import fr.iglee42.compressedbox.CompressedBox;
+import fr.iglee42.compressedbox.blocks.WallBlock;
 import fr.iglee42.compressedbox.blocks.modules.ChunkLoaderModuleBlock;
 import fr.iglee42.compressedbox.blocks.CompressedBlock;
 import fr.iglee42.compressedbox.blocks.modules.InfiniteChunkLoaderModuleBlock;
@@ -21,6 +22,7 @@ public class CBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(CompressedBox.MODID, Registries.BLOCK);
 
     public static final RegistrySupplier<CompressedBlock> COMPRESSED_BLOCK = createBlock("compressed_block",()->new CompressedBlock(BlockBehaviour.Properties.of().strength(2).noOcclusion()));
+    public static final RegistrySupplier<WallBlock> WALL = createBlockWithoutItem("wall",()->new WallBlock(BlockBehaviour.Properties.of().strength(-1,99999999).noLootTable().noOcclusion()));
     public static final RegistrySupplier<SlotModuleBlock> SLOT = createBlock("slot", ()->new SlotModuleBlock(BlockBehaviour.Properties.of().strength(2)));
     public static final RegistrySupplier<TankModuleBlock> TANK = createBlock("tank", ()->new TankModuleBlock(BlockBehaviour.Properties.of().noOcclusion().strength(2)));
     public static final RegistrySupplier<ChunkLoaderModuleBlock> CHUNK_LOADER = createBlock("chunk_loader", ()->new ChunkLoaderModuleBlock(BlockBehaviour.Properties.of().strength(2).lightLevel(bs-> RespawnAnchorBlock.getScaledChargeLevel(bs,15))));
