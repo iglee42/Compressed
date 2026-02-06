@@ -1,8 +1,6 @@
 package fr.iglee42.compressedbox;
 
-import dev.architectury.event.events.common.CommandRegistrationEvent;
-import dev.architectury.event.events.common.InteractionEvent;
-import dev.architectury.event.events.common.TickEvent;
+import dev.architectury.event.events.common.*;
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.platform.Platform;
 import fr.iglee42.compressedbox.blocks.modules.InfiniteChunkLoaderModuleBlock;
@@ -42,6 +40,10 @@ public final class CompressedBox {
         TickEvent.SERVER_LEVEL_POST.register(level-> BoxesSaveData.get(level).tick(level));
         InteractionEvent.RIGHT_CLICK_BLOCK.register(InfiniteChunkLoaderModuleBlock::craft);
         CommandRegistrationEvent.EVENT.register((dispatcher,registry,selection)-> new CCommand(dispatcher));
+
+        BlockEvent.PLACE.register((level,pos,state,player)-> BoxesSaveData.prevActionOutOfBoxes(level,player,pos));
+        BlockEvent.BREAK.register((level,pos,state,player,xp)-> BoxesSaveData.prevActionOutOfBoxes(level,player,pos));
+        TickEvent.PLAYER_POST.register(BoxesSaveData::exitFromDimIfPlayerOutOfBox);
     }
 
     private static void registerPacketReceivers() {

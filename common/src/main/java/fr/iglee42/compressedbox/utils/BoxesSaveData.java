@@ -2,11 +2,14 @@ package fr.iglee42.compressedbox.utils;
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
+import dev.architectury.event.EventResult;
 import dev.architectury.networking.NetworkManager;
 import fr.iglee42.compressedbox.CompressedBox;
 import fr.iglee42.compressedbox.packets.payloads.s2c.ClearPlayerCurrentBoxPayload;
 import fr.iglee42.compressedbox.packets.payloads.s2c.SyncPlayerCurrentBoxPayload;
+import fr.iglee42.compressedbox.registries.CBlocks;
 import lombok.Getter;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.UUIDUtil;
@@ -14,14 +17,17 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.datafix.DataFixTypes;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.storage.DimensionDataStorage;
 import org.jetbrains.annotations.NotNull;
@@ -71,6 +77,33 @@ public class BoxesSaveData extends SavedData {
         }
         DimensionDataStorage storage = ((ServerLevel) level).getServer().overworld().getDataStorage();
         return storage.computeIfAbsent(new Factory<>(BoxesSaveData::new,BoxesSaveData::new,DataFixTypes.LEVEL), CompressedBox.MODID+"_boxes");
+    }
+
+    public static EventResult prevActionOutOfBoxes(Level level, @Nullable Entity entity, @Nullable BlockPos blockPos) {
+        if (level.isClientSide || !level.dimension().equals(Box.DIMENSION)) return EventResult.pass();
+        BoxesSaveData manager = get(level);
+
+        if (blockPos != null){
+            if (!level.getBlockState(blockPos).is(CBlocks.WALL.get()) && !level.getBlockState(blockPos).is(Blocks.BEDROCK)) {
+                Box box = manager.getBoxByBlockPos(blockPos);
+                if (box == null) return EventResult.interruptFalse();
+            }
+        }
+        if (entity instanceof Player player){
+            if (manager.getBoxFromPlayer(player) == null) return EventResult.interruptFalse();
+        }
+        return EventResult.pass();
+    }
+
+    public static void exitFromDimIfPlayerOutOfBox(Player player) {
+        Level level = player.level();
+        if (level.isClientSide || !level.dimension().equals(Box.DIMENSION) ) return;
+
+        BoxesSaveData manager = get(level);
+        if (manager.getBoxFromPlayer(player) == null) {
+            manager.exitPlayerFromBox((ServerPlayer) player);
+            player.displayClientMessage(CompressedBox.PREFIX.copy().append(Component.translatable("message.compressedbox.tried_escape_box").withStyle(ChatFormatting.RED)),false);
+        }
     }
 
     @Override
@@ -162,4 +195,22 @@ public class BoxesSaveData extends SavedData {
         setDirty();
     }
 
+    public void exitPlayerFromBox(ServerPlayer player) {
+        Pair<ResourceKey<Level>, BlockPos> pair = getPlayerEntryPoint(player);
+
+        if (pair == null || pair.getFirst() == null || pair.getSecond() == null){
+            player.displayClientMessage(Component.translatable("message.compressedbox.box_not_found_entry_point").withStyle(ChatFormatting.RED),true);
+            pair = Pair.of(player.getRespawnDimension(),player.getRespawnPosition());
+        }
+
+        if (pair == null || pair.getFirst() == null || pair.getSecond() == null){
+            pair = Pair.of(player.server.overworld().dimension(),player.server.overworld().getSharedSpawnPos());
+        }
+
+        ServerLevel dimension = player.getServer().getLevel(pair.getFirst());
+        BlockPos pos = pair.getSecond();
+        if (player.teleportTo(dimension,pos.getX() + 0.5,pos.getY() + 0.5,pos.getZ() + 0.5, Set.of(),player.getXRot(),player.getYRot())){
+            removePlayerEntryPoint(player);
+        }
+    }
 }
