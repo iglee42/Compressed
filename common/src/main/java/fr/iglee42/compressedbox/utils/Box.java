@@ -2,6 +2,7 @@ package fr.iglee42.compressedbox.utils;
 
 import fr.iglee42.compressedbox.CompressedBox;
 import fr.iglee42.compressedbox.containers.ConnectedSlotHandler;
+import fr.iglee42.compressedbox.containers.fluids.ConnectedTankHandler;
 import fr.iglee42.compressedbox.packets.s2c.OpenTutorialScreenPacket;
 import fr.iglee42.compressedbox.registries.CNetworking;
 import lombok.*;
@@ -149,6 +150,15 @@ public class Box {
             return null;
         }
         return new ConnectedSlotHandler(dimension, minPos, maxPos);
+    }
+
+    public ConnectedTankHandler getFluids(Level level) {
+        ServerLevel dimension = level.getServer().getLevel(DIMENSION);
+        if (dimension == null) {
+            CompressedBox.LOGGER.error("Unable to find the compressed level for fluid handler !");
+            return null;
+        }
+        return new ConnectedTankHandler(dimension, minPos, maxPos);
     }
 
     public Component getName() {

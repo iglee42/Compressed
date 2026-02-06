@@ -1,11 +1,21 @@
 package fr.iglee42.compressedbox.forge;
 
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import dev.architectury.fluid.FluidStack;
+import dev.architectury.hooks.fluid.forge.FluidStackHooksForge;
 import fr.iglee42.compressedbox.CompressedBox;
 import fr.iglee42.compressedbox.config.CClientConfig;
 import fr.iglee42.compressedbox.config.CConfig;
 import fr.iglee42.compressedbox.forge.client.CompressedClientConfigForge;
 import fr.iglee42.compressedbox.utils.PlatformHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLPaths;
@@ -17,6 +27,21 @@ import java.util.List;
 
 public class CompressedPlatformHelperForge implements PlatformHelper {
 
+
+    @Override
+    public TextureAtlasSprite getFluidSprite(FluidStack stack) {
+        net.minecraftforge.fluids.FluidStack fluid = FluidStackHooksForge.toForge(stack);
+        var renderProps = IClientFluidTypeExtensions.of(fluid.getFluid());
+        return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
+                .apply(renderProps.getStillTexture(fluid));
+    }
+
+    @Override
+    public int getFluidColor(FluidStack stack, BlockAndTintGetter getter, BlockPos pos) {
+        net.minecraftforge.fluids.FluidStack fluid = FluidStackHooksForge.toForge(stack);
+        var renderProps = IClientFluidTypeExtensions.of(fluid.getFluid());
+        return renderProps.getTintColor();
+    }
 
     @Override
     public CConfig getConfig() {

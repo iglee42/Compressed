@@ -8,9 +8,11 @@ import dev.architectury.registry.ReloadListenerRegistry;
 import dev.architectury.registry.client.rendering.BlockEntityRendererRegistry;
 import dev.architectury.registry.client.rendering.RenderTypeRegistry;
 import fr.iglee42.compressedbox.CompressedBox;
+import fr.iglee42.compressedbox.client.renderer.modules.ChunkLoadRenderer;
 import fr.iglee42.compressedbox.client.renderer.CompressedBERenderer;
 import fr.iglee42.compressedbox.client.renderer.modules.ChunkLoadRenderer;
 import fr.iglee42.compressedbox.client.renderer.modules.SlotRenderer;
+import fr.iglee42.compressedbox.client.renderer.modules.TankRenderer;
 import fr.iglee42.compressedbox.packets.c2s.SetBoxNamePacket;
 import fr.iglee42.compressedbox.registries.CBlockEntities;
 import fr.iglee42.compressedbox.registries.CBlocks;
@@ -55,11 +57,13 @@ public class CompressedClient {
         });
         ReloadListenerRegistry.register(PackType.CLIENT_RESOURCES,new TutorialRegistry());
         if (Platform.isFabric()) RenderTypeRegistry.register(RenderType.cutoutMipped(), CBlocks.COMPRESSED_BLOCK.get());
+        if (Platform.isFabric()) RenderTypeRegistry.register(RenderType.cutoutMipped(), CBlocks.TANK.get());
     }
 
     public static void registerBER(){
         BlockEntityRendererRegistry.register(CBlockEntities.COMPRESSED.get(), CompressedBERenderer::new);
         BlockEntityRendererRegistry.register(CBlockEntities.SLOT.get(), SlotRenderer::new);
+        BlockEntityRendererRegistry.register(CBlockEntities.TANK.get(), TankRenderer::new);
         BlockEntityRendererRegistry.register(CBlockEntities.CHUNK_LOAD.get(), ChunkLoadRenderer::new);
         BlockEntityRendererRegistry.register(CBlockEntities.INFINITE_CHUNK_LOAD.get(), ChunkLoadRenderer::new);
     }

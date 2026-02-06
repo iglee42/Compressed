@@ -7,6 +7,7 @@ import fr.iglee42.compressedbox.blockentities.modules.SlotModule;
 import fr.iglee42.compressedbox.blockentities.modules.ChunkLoadModule;
 import fr.iglee42.compressedbox.blockentities.CompressedBlockEntity;
 import fr.iglee42.compressedbox.blockentities.modules.InfiniteChunkLoadModule;
+import fr.iglee42.compressedbox.blockentities.modules.TankModule;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -21,6 +22,7 @@ public class CBlockEntities {
 
     public static RegistrySupplier<BlockEntityType<CompressedBlockEntity>> COMPRESSED = register("compressed_block", CompressedBlockEntity::new, CBlocks.COMPRESSED_BLOCK::get);
     public static RegistrySupplier<BlockEntityType<SlotModule>> SLOT = register("slot", SlotModule::new, CBlocks.SLOT::get);
+    public static RegistrySupplier<BlockEntityType<TankModule>> TANK = register("tank", TankModule::new, CBlocks.TANK::get);
     public static RegistrySupplier<BlockEntityType<ChunkLoadModule>> CHUNK_LOAD = register("chunk_load", ChunkLoadModule::new, CBlocks.CHUNK_LOADER::get);
     public static RegistrySupplier<BlockEntityType<InfiniteChunkLoadModule>> INFINITE_CHUNK_LOAD = register("infinite_chunk_load", InfiniteChunkLoadModule::new, CBlocks.INFINITE_CHUNK_LOADER::get);
 
