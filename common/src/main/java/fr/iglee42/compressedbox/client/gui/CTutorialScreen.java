@@ -133,6 +133,7 @@ public class CTutorialScreen extends Screen {
         INTRO(CBlocks.COMPRESSED_BLOCK.get()),
         CHUNK_LOADER(CBlocks.INFINITE_CHUNK_LOADER.get()),
         SLOT(CBlocks.SLOT.get()),
+        TANK(CBlocks.TANK.get()),
         WALL_PUSHER(CItems.WALL_PUSHER.get())
         ;
         private final ItemStack icon;
