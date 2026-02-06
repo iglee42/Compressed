@@ -8,9 +8,12 @@ import fr.iglee42.compressedbox.blockentities.modules.TankModule;
 import fr.iglee42.compressedbox.forge.client.CompressedClientConfigForge;
 import fr.iglee42.compressedbox.forge.client.CompressedClientForge;
 import fr.iglee42.compressedbox.forge.implementations.ConnectedTankWrapper;
+import fr.iglee42.compressedbox.forge.implementations.FluidStackListWrapper;
 import fr.iglee42.compressedbox.forge.implementations.SimpleTankWrapper;
 import fr.iglee42.compressedbox.registries.CBlockEntities;
 import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
@@ -24,6 +27,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,9 +53,11 @@ public final class CompressedForge {
                     if (be.getBox() == null) return LazyOptional.empty();
                     if (be.getLevel() == null) return LazyOptional.empty();
                     if (capability == ForgeCapabilities.ITEM_HANDLER){
+                        if (be.getLevel().getServer() == null) return LazyOptional.of(()->new ItemStackHandler(NonNullList.of(ItemStack.EMPTY,be.getClientItems().toArray(new ItemStack[0])))).cast();
                         if (be.getBox().getItems(be.getLevel()) == null) return LazyOptional.empty();
                         return LazyOptional.of(() -> new InvWrapper( be.getBox().getItems(be.getLevel()))).cast();
                     } else if (capability == ForgeCapabilities.FLUID_HANDLER){
+                        if (be.getLevel().getServer() == null) return LazyOptional.of(()->new FluidStackListWrapper(be.getClientFluids())).cast();
                         if (be.getBox().getFluids(be.getLevel()) == null) return LazyOptional.empty();
                         return LazyOptional.of(() -> new ConnectedTankWrapper( be.getBox().getFluids(be.getLevel()))).cast();
                     }

@@ -90,4 +90,14 @@ public class ConnectedSlotHandler implements Container {
         return blocks;
     }
 
+    public List<ItemStack> getItems(){
+        return getBlockEntities().stream().flatMap(be->{
+            ArrayList<ItemStack> stacks = new ArrayList<>();
+            for (int i = 0; i < be.getHandler().getContainerSize(); i++){
+                stacks.add(be.getHandler().getItem(i));
+            }
+            return stacks.stream();
+        }).toList();
+    }
+
 }

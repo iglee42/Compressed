@@ -3,6 +3,8 @@ package fr.iglee42.compressedbox.fabric;
 import dev.architectury.registry.CreativeTabRegistry;
 import dev.architectury.registry.fabric.CreativeTabRegistryImpl;
 import fr.iglee42.compressedbox.fabric.implementations.ConnectedTankStorageImpl;
+import fr.iglee42.compressedbox.fabric.implementations.FluidStackListStorageImpl;
+import fr.iglee42.compressedbox.fabric.implementations.ItemStackListStorageImpl;
 import fr.iglee42.compressedbox.fabric.implementations.SimpleTankStorageImpl;
 import fr.iglee42.compressedbox.registries.CBlockEntities;
 import fr.iglee42.compressedbox.registries.CBlocks;
@@ -51,6 +53,7 @@ public final class CompressedFabric implements ModInitializer {
 
         ItemStorage.SIDED.registerForBlockEntity((be, direction) -> {
             if (be.getBox() == null) return null;
+            if (be.getLevel().getServer() == null) return new ItemStackListStorageImpl(be.getClientItems());
             if (be.getBox().getItems(be.getLevel()) == null) return null;
             return InventoryStorage.of(be.getBox().getItems(be.getLevel()),direction);
         }, CBlockEntities.COMPRESSED.get());
@@ -68,6 +71,7 @@ public final class CompressedFabric implements ModInitializer {
 
         FluidStorage.SIDED.registerForBlockEntity((be, direction) -> {
             if (be.getBox() == null) return null;
+            if (be.getLevel().getServer() == null) return new FluidStackListStorageImpl(be.getClientFluids());
             if (be.getBox().getItems(be.getLevel()) == null) return null;
             return new ConnectedTankStorageImpl(be.getBox().getFluids(be.getLevel()));
         }, CBlockEntities.COMPRESSED.get());
