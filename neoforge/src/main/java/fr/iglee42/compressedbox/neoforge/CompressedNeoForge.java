@@ -3,6 +3,8 @@ package fr.iglee42.compressedbox.neoforge;
 import fr.iglee42.compressedbox.CompressedBox;
 import fr.iglee42.compressedbox.neoforge.client.CompressedClientConfigNeoForge;
 import fr.iglee42.compressedbox.neoforge.client.CompressedClientNeoForge;
+import fr.iglee42.compressedbox.neoforge.implementations.ConnectedTankWrapper;
+import fr.iglee42.compressedbox.neoforge.implementations.SimpleTankWrapper;
 import fr.iglee42.compressedbox.registries.CBlockEntities;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -41,6 +43,24 @@ public final class CompressedNeoForge {
                 ((be,c)->{
                     if (be.getHandler() == null) return null;
                     return new InvWrapper(be.getHandler());
+                })
+        );
+
+        event.registerBlockEntity(
+                Capabilities.FluidHandler.BLOCK,
+                CBlockEntities.COMPRESSED.get(),
+                ((be,c)->{
+                    if (be.getBox() == null) return null;
+                    if (be.getBox().getFluids(be.getLevel()) == null) return null;
+                    return new ConnectedTankWrapper(be.getBox().getFluids(be.getLevel()));
+                })
+        );
+        event.registerBlockEntity(
+                Capabilities.FluidHandler.BLOCK,
+                CBlockEntities.TANK.get(),
+                ((be,c)->{
+                    if (be.getHandler() == null) return null;
+                    return new SimpleTankWrapper(be.getHandler());
                 })
         );
     }

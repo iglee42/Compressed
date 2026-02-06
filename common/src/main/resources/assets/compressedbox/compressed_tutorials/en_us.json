@@ -47,6 +47,14 @@
       "text": "\n\nThe Compressed Box's Block can also be used as an interface for all the slots in the box.\nFor example, if you have 5 slots in your box, you can input 5 stacks of any item in the box's block and it will automatically store them in the slots inside of the box.\nIn order for this to be possible, the box must be loaded like with a [item:compressedbox:chunk_loader]."
     }
   ],
+  "tank": [
+    {
+      "text": "[item:compressedbox:tank] are slots but for fluids.\nBy placing a tank block inside your compressed box, you will be able to store 16 buckets of any fluid inside it.\nTanks can be accessed directly with pipes but you can also use buckets on them to add/remove fluid."
+    },
+    {
+      "text": "\n\nAs a slot, Compressed Box's Block can be an interface for tanks in your box.\nIn order for this to be possible, the box must be loaded like with a [item:compressedbox:chunk_loader]."
+    }
+  ],
   "wall_pusher": [
     {
       "text": "The default size of a Compressed Box is 16x16x16 blocks, but sometimes this is not enough space to build what you want.\nThis is why the [item:compressedbox:wall_pusher] was created."

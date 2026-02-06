@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "OPO",
+    "P P",
+    "OPO"
+  ],
+  "key": {
+    "O": {
+      "tag": "c:ingots/iron"
+    },
+    "P": {
+      "tag": "c:glass_blocks"
+    }
+  },
+  "result": {
+    "id": "compressedbox:tank"
+  }
+}

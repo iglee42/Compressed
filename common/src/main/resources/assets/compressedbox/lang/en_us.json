@@ -26,6 +26,7 @@
   "gui.compressedbox.tutorial.intro": "Introduction",
   "gui.compressedbox.tutorial.chunk_loader": "Chunk Loaders",
   "gui.compressedbox.tutorial.slot": "Slots",
+  "gui.compressedbox.tutorial.tank": "Tanks",
   "gui.compressedbox.tutorial.wall_pusher": "Increasing Box Size",
   "gui.compressedbox.tutorial": "Help with Compressed Mod",
   "gui.compressedbox.skip_tutorial": "Skip Tutorial",
@@ -35,6 +36,7 @@
   "block.compressedbox.chunk_loader": "Chunk Loader",
   "block.compressedbox.infinite_chunk_loader": "Infinite Chunk Loader",
   "block.compressedbox.slot": "Slot",
+  "block.compressedbox.tank": "Tank",
 
   "item.compressedbox.wall_pusher": "Wall Pusher",
 

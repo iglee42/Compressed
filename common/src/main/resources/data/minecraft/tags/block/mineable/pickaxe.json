@@ -4,6 +4,7 @@
     "compressedbox:compressed_block",
     "compressedbox:chunk_loader",
     "compressedbox:infinite_chunk_loader",
-    "compressedbox:slot"
+    "compressedbox:slot",
+    "compressedbox:tank"
   ]
 }

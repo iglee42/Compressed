@@ -1,0 +1,6 @@
+{
+  "parent": "compressedbox:block/compressed_block",
+  "textures": {
+    "wall": "minecraft:block/iron_block"
+  }
+}
