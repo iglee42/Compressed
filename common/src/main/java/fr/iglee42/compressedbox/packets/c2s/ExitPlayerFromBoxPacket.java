@@ -34,22 +34,7 @@ public class ExitPlayerFromBoxPacket {
         context.queue(()->{
             ServerPlayer player = (ServerPlayer) context.getPlayer();
             BoxesSaveData data = BoxesSaveData.get(player.level());
-            Pair<ResourceKey<Level>, BlockPos> pair = data.getPlayerEntryPoint(player);
-
-            if (pair == null || pair.getFirst() == null || pair.getSecond() == null){
-                player.displayClientMessage(Component.translatable("message.compressedbox.box_not_found_entry_point").withStyle(ChatFormatting.RED),true);
-                pair = Pair.of(player.getRespawnDimension(),player.getRespawnPosition());
-            }
-
-            if (pair == null || pair.getFirst() == null || pair.getSecond() == null){
-                pair = Pair.of(player.server.overworld().dimension(),player.server.overworld().getSharedSpawnPos());
-            }
-
-            ServerLevel dimension = player.getServer().getLevel(pair.getFirst());
-            BlockPos pos = pair.getSecond();
-            if (player.teleportTo(dimension,pos.getX() + 0.5,pos.getY() + 0.5,pos.getZ() + 0.5, Set.of(),player.getXRot(),player.getYRot())){
-                data.removePlayerEntryPoint(player);
-            }
+            data.exitPlayerFromBox(player);
 
         });
     }

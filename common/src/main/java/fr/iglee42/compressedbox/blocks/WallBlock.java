@@ -26,7 +26,7 @@ public class WallBlock extends Block {
     }
 
     @Override
-    protected RenderShape getRenderShape(BlockState blockState) {
+    public RenderShape getRenderShape(BlockState blockState) {
         return blockState.getValue(FORM) == 1 ? RenderShape.INVISIBLE : super.getRenderShape(blockState);
     }
 
@@ -42,11 +42,11 @@ public class WallBlock extends Block {
     }
 
     @Override
-    protected float getShadeBrightness(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+    public float getShadeBrightness(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
         return blockState.getValue(FORM) == 1 ? 1f : super.getShadeBrightness(blockState, blockGetter, blockPos);
     }
     @Override
-    protected boolean propagatesSkylightDown(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+    public boolean propagatesSkylightDown(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
         return blockState.getValue(FORM) == 1;
     }
 

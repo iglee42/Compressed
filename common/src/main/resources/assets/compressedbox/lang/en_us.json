@@ -22,6 +22,7 @@
   "message.compressedbox.box_spawn_modified": "Spawn modified successfully !",
   "message.compressedbox.level_not_found": "Unable to find the level for compressed blocks !",
   "message.compressedbox.cannot_push_wall": "Unable to push the wall (maybe the box is already max size) !",
+  "message.compressedbox.tried_escape_box": "You tried to escape from your box, I'm not happy >:( !",
 
   "gui.compressedbox.tutorial.intro": "Introduction",
   "gui.compressedbox.tutorial.chunk_loader": "Chunk Loaders",
