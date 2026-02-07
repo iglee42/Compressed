@@ -81,4 +81,8 @@ subprojects {
             // retrieving dependencies.
         }
     }
+
+    remapJar {
+        destinationDirectory = file("$rootDir/jars")
+    }
 }
