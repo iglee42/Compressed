@@ -110,7 +110,7 @@ public class Box {
 
     public void teleportPlayerIn(Player player, ServerLevel level) {
         BoxesSaveData manager = BoxesSaveData.get(level);
-        manager.addPlayerEntryPoint(player);
+        if (!player.level().dimension().equals(DIMENSION)) manager.addPlayerEntryPoint(player);
 
         BlockPos pos = getPlayersEnters().getOrDefault(player.getUUID(), new BlockPos(minPos.getX() + 1, 64, minPos.getZ() + 1));
         ServerLevel dimension = level.getServer().getLevel(DIMENSION);
