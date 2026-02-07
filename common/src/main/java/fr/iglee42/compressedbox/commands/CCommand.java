@@ -75,7 +75,7 @@ public class CCommand{
         debugInfos.append("=== CompressedBox Debug Infos ===\n\n");
         debugInfos.append("Minecraft Version: ").append(player.level().getServer().getServerVersion()).append("\n");
         debugInfos.append("Platform: ").append(Services.PLATFORM.getPlatform()).append("\n");
-        debugInfos.append("Platform Version: ").append(Services.PLATFORM.getPlatform()).append("\n");
+        debugInfos.append("Platform Version: ").append(Services.PLATFORM.getPlatformVersion()).append("\n");
         debugInfos.append("Other Mods: ").append(Services.PLATFORM.getModLoaded().stream().reduce("", (a, b) -> a + " | " + b)).append("\n");
 
         debugInfos.append("\n===========================\n\n");
